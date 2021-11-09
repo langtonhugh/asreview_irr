@@ -1,0 +1,163 @@
+---
+title: "ASReview report"
+author: "Samuel Langton"
+date: "02/11/2021"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F)
+# Load packages.
+library(readr)
+library(dplyr)
+library(stringr)
+library(purrr)
+library(irr)
+library(kableExtra)
+```
+
+```{r start}
+# Load data.
+first_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
+secon_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
+
+# Total reviewed.
+first_total <- table(first_df$included)[[2]] + table(first_df$included)[[1]]
+secon_total <- table(secon_df$included)[[2]] + table(secon_df$included)[[1]]
+
+# Relevant flags.
+first_rele <- table(first_df$included)[[2]]
+first_irre <- table(first_df$included)[[1]]
+
+# Irrelevant flags.
+secon_rele <- table(secon_df$included)[[2]]
+secon_irre <- table(secon_df$included)[[1]]
+
+# Not reviewed
+first_unrev <- sum(is.na(first_df$included))
+secon_unrev <- sum(is.na(secon_df$included))
+
+# % reviewed.
+first_prev <- round(100*first_total/nrow(first_df), 2)
+secon_prev <- round(100*secon_total/nrow(secon_df), 2)
+
+# Total irrelevant.
+first_trele <- first_irre + first_unrev
+secon_trele <- secon_irre + secon_unrev
+
+# % total relevant.
+first_ptrel <- round(100*first_rele/nrow(first_df), 2)
+secon_ptrel <- round(100*secon_rele/nrow(secon_df), 2)
+
+# % flagged relevant.
+first_pfrel <- round(100*first_rele/first_total, 2)
+secon_pfrel <- round(100*secon_rele/secon_total, 2)
+
+# Recode 'not rated' as irrelevant in each data frame.
+first_rec_df <- first_df %>%
+  mutate(included = if_else(is.na(included), true = 0, false = included))
+
+secon_rec_df <- secon_df %>%
+  mutate(included = if_else(is.na(included), true = 0, false = included))
+
+
+# Disagreements 1: first coder says irrelevant, second coder says relevant.
+
+first_irrelevant_vec <- first_rec_df %>% 
+  filter(included == 0) %>% 
+  pluck("record_id")
+
+disagree1_df <- secon_rec_df %>% 
+  filter(included == 1, record_id %in% first_irrelevant_vec) %>% 
+  select(record_id, first_authors, publication_year, primary_title, , notes_abstract)
+
+first_dis <- nrow(disagree1_df) # 6
+
+# Disagreement 2: second coder says irrelevant, first coder says relevant.
+
+secon_irrelevant_vec <- secon_rec_df %>% 
+  filter(included == 0) %>% 
+  pluck("record_id")
+
+disagree2_df <- first_rec_df %>% 
+  filter(included == 1, record_id %in% secon_irrelevant_vec) %>% 
+  select(record_id, first_authors, publication_year, primary_title, , notes_abstract)
+
+secon_dis <- nrow(disagree2_df) # 39
+
+# Sort and create vectors for Kappa.
+first_vec <- first_rec_df %>% 
+  arrange(record_id) %>% 
+  pluck("included")
+
+secon_vec <- secon_rec_df %>% 
+  arrange(record_id) %>% 
+  pluck("included")
+
+# Create array for Kappa.
+full_array <- cbind(first_vec, secon_vec)
+```
+
+# Summary
+
+|                       | rater 1            | rater 2            |
+| --------------------- |:------------------:| ------------------:|
+| n uploaded            | `r nrow(first_df)` | `r nrow(secon_df)` |
+| n reviewed            | `r first_total`    | `r secon_total`    |
+| % reviewed            | `r first_prev`     | `r secon_prev`     |
+| n flagged relevant    | `r first_rele`     | `r secon_rele`     |
+| n flagged irrelevant  | `r first_irre`     | `r secon_irre`     |
+| % flagged relevant    | `r first_pfrel`    | `r secon_pfrel`    |
+| n unreviewed          | `r first_unrev`    | `r secon_unrev`    |
+| n total irrelevant    | `r first_trele`    | `r secon_trele`    |
+| % total relevant      | `r first_ptrel`    | `r secon_ptrel`    |
+| relevant missed       | `r first_dis`      | `r secon_dis`      |  
+
+# Kappa
+
+The level of agreement between rater 1 and rater 2, assuming that unreviewed articles are irrelevant, is the following:
+
+```{r}
+agree(full_array)
+```
+
+The Kappa statistic is the following:
+
+```{r}
+kappa2(full_array)
+```
+
+# Disagreements
+
+## Rater 1
+
+Studies for which  rater 1 flagged relevant and rater 2 flagged irrelevant.
+
+```{r}
+disagree2_df %>% 
+  mutate(publication_year = str_remove_all(publication_year, "///")) %>% 
+kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
+  # scroll_box(width = "120%", height = "300px") %>% 
+  kable_styling()
+```
+
+<br>
+
+<br>
+
+## Rater 2
+
+Studies for which  rater 2 flagged relevant and rater 1 flagged irrelevant.
+
+```{r}
+disagree1_df %>% 
+  mutate(publication_year = str_remove_all(publication_year, "///")) %>% 
+kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
+  # scroll_box(width = "120%", height = "300px") %>% 
+  kable_styling()
+```
+
