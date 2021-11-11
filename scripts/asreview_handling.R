@@ -74,6 +74,40 @@ disagree2_df <- first_rec_df %>%
 
 secon_dis <- nrow(disagree2_df) # 39
 
+# Make the distinction between *coded* irrelevant and *not reviewed*.
+first_rec_df <- first_df %>% 
+  mutate(included_dist = if_else(is.na(included), true = 3, false = included))
+
+secon_rec_df <- secon_df %>% 
+  mutate(included_dist = if_else(is.na(included), true = 3, false = included))
+
+# Identify those which each reviewer did not even look at.
+first_dist_vec <- first_rec_df %>% 
+  filter(included_dist == 3) %>% 
+  pluck("record_id")
+
+secon_dist_vec <- secon_rec_df %>% 
+  filter(included_dist == 3) %>% 
+  pluck("record_id")
+
+# Identify those relevant by one rather, and unreviewed by the other.
+first_dist_df <- first_rec_df %>% 
+  filter(included == 1) %>% 
+  mutate(missed = if_else(record_id %in% secon_dist_vec,
+                          "missed",
+                          "not missed"))
+
+secon_dist_df <- secon_rec_df %>% 
+  filter(included == 1) %>% 
+  mutate(missed = if_else(record_id %in% secon_dist_vec,
+                          "missed",
+                          "not missed"))
+
+# How many studies did one rather say *relevcant* and the other reviewer
+# not even review?
+nrow(first_dist_df) - table(first_dist_df$missed)[[1]]
+nrow(secon_dist_df) - table(secon_dist_df$missed)[[1]]
+
 # Sort and create vectors for Kappa.
 first_vec <- first_rec_df %>% 
   arrange(record_id) %>% 

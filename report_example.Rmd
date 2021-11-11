@@ -1,7 +1,7 @@
 ---
 title: "ASReview report"
 author: "Samuel Langton"
-date: "02/11/2021"
+date: "11/11/2021"
 output:
   html_document:
     toc: true
@@ -100,22 +100,52 @@ secon_vec <- secon_rec_df %>%
 
 # Create array for Kappa.
 full_array <- cbind(first_vec, secon_vec)
+
+# Further disgareement statistics.
+
+# Identify those which each reviewer did not even look at.
+first_dist_vec <- first_rec_df %>% 
+  filter(included == 3) %>% 
+  pluck("record_id")
+
+secon_dist_vec <- secon_rec_df %>% 
+  filter(included == 3) %>% 
+  pluck("record_id")
+
+# Identify those relevant by one rather, and unreviewed by the other.
+first_dist_df <- first_rec_df %>% 
+  filter(included == 1) %>% 
+  mutate(missed = if_else(record_id %in% secon_dist_vec,
+                          "missed",
+                          "not missed"))
+
+secon_dist_df <- secon_rec_df %>% 
+  filter(included == 1) %>% 
+  mutate(missed = if_else(record_id %in% secon_dist_vec,
+                          "missed",
+                          "not missed"))
+
+# How many studies did one rather say *relevcant* and the other reviewer
+# not even review?
+missed1 <- nrow(first_dist_df) - table(first_dist_df$missed)[[1]]
+missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[[1]]
 ```
 
 # Summary
 
-|                       | rater 1            | rater 2            |
-| --------------------- |:------------------:| ------------------:|
-| n uploaded            | `r nrow(first_df)` | `r nrow(secon_df)` |
-| n reviewed            | `r first_total`    | `r secon_total`    |
-| % reviewed            | `r first_prev`     | `r secon_prev`     |
-| n flagged relevant    | `r first_rele`     | `r secon_rele`     |
-| n flagged irrelevant  | `r first_irre`     | `r secon_irre`     |
-| % flagged relevant    | `r first_pfrel`    | `r secon_pfrel`    |
-| n unreviewed          | `r first_unrev`    | `r secon_unrev`    |
-| n total irrelevant    | `r first_trele`    | `r secon_trele`    |
-| % total relevant      | `r first_ptrel`    | `r secon_ptrel`    |
-| relevant missed       | `r first_dis`      | `r secon_dis`      |  
+|                          | rater 1            | rater 2            |
+| ------------------------ |:------------------:| ------------------:|
+| n uploaded               | `r nrow(first_df)` | `r nrow(secon_df)` |
+| n reviewed               | `r first_total`    | `r secon_total`    |
+| % reviewed               | `r first_prev`     | `r secon_prev`     |
+| n flagged relevant       | `r first_rele`     | `r secon_rele`     |
+| n flagged irrelevant     | `r first_irre`     | `r secon_irre`     |
+| % flagged relevant       | `r first_pfrel`    | `r secon_pfrel`    |
+| n unreviewed             | `r first_unrev`    | `r secon_unrev`    |
+| n total irrelevant       | `r first_trele`    | `r secon_trele`    |
+| % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
+| n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
+| n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
 
 # Kappa
 
