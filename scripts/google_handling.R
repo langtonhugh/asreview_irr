@@ -36,11 +36,11 @@ google_sub_df <- google_df %>%
   mutate(google_title_simple = str_to_lower(google_title),
          google_title_simple = str_replace_all(google_title_simple, "[[:punct:]]", "")) %>% 
   filter(google_title_simple %nin% asreview_clean_simple_vec) %>% 
-  arrange(google_id) # google's most relevant first.
+  arrange(google_id) 
 
 # How many deleted? These are studies found in both google and asreview (identified so far).
 nrow(google_df) - nrow(google_sub_df) # 180 studies
 
-# Save raw data as csv for review in Excel.
+# Save raw data as csv for review in Excel (800 to review).
 # We then 'save as' an Excel workbook for review, leaving this csv untouched.
 write_csv(x = google_sub_df, file = "data/google_results_non_dup.csv")
