@@ -1,5 +1,8 @@
 # Load packages
 library(readxl)
+library(readr)
+library(dplyr)
+library(stringr)
 
 # Load in the reviewed workbook, with a new variable indicating relevant or irrelevant.
 google_reviewed_df <- read_xlsx("data/google_results_non_dup.xlsx")
@@ -29,10 +32,10 @@ google_relevant_clean_df <- google_relevant_df %>%
          journal = source) %>% 
   mutate(database = "google")
 
-# Row bind.
-relevant_clean_df <- bind_rows(asr_relevant_clean_df, google_relevant_clean_df)
-
-# Save.
-write_csv(x = relevant_clean_df, file = "data/asr_google_relevant.csv")
-
+# Row bind and try to standardise format a bit.
+relevant_clean_df <- asr_relevant_clean_df %>% 
+  bind_rows(google_relevant_clean_df) %>%
+  mutate(journal = str_to_title(journal)) 
   
+# Save. This is then 'Save As' an Excel workbook for manual data input for the full-text eligibility stage.
+write_csv(x = relevant_clean_df, file = "data/asr_google_relevant.csv")

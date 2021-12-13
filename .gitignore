@@ -1,6 +1,7 @@
 # Data
 data/*
-
+!data/text_doc.txt
+literature/*
 
 # History files
 .Rhistory
