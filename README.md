@@ -6,3 +6,6 @@ Step 1: Download and save the .csv outputs from ASReview into the 'data' folder.
 Step 2: Open up the asreview_irr.Rproj in RStdudio.  
 Step 3: Open report_example.Rmd and change the .csv file names accordingly, so it loads in your data.  
 Step 4: Knit the report.  
+
+
+Thanks to Amy Nivette, Amina op de Weegh, Stijn Ruiter, and the ASReview team for feedback on improving this report.
