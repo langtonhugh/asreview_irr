@@ -1,7 +1,7 @@
 ---
 title: "ASReview report"
 author: "Samuel Langton"
-date: "11/11/2021"
+date: "3 January 2022"
 output:
   html_document:
     toc: true
@@ -71,9 +71,11 @@ first_irrelevant_vec <- first_rec_df %>%
   filter(included == 0) %>% 
   pluck("record_id")
 
+# Here, note that ASReview updated their default column names late-2021. Choose the relevant select() option for your data.
 disagree1_df <- secon_rec_df %>% 
   filter(included == 1, record_id %in% first_irrelevant_vec) %>% 
-  select(record_id, first_authors, publication_year, primary_title, notes_abstract)
+  # select(record_id, authors, year, title, abstract) # For newer projects.
+  select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects. 
 
 first_dis <- nrow(disagree1_df) # 6
 
@@ -83,9 +85,11 @@ secon_irrelevant_vec <- secon_rec_df %>%
   filter(included == 0) %>% 
   pluck("record_id")
 
+# Here, note that ASReview updated their default column names late-2021. Choose the relevant select() option for your data.
 disagree2_df <- first_rec_df %>% 
   filter(included == 1, record_id %in% secon_irrelevant_vec) %>% 
-  select(record_id, first_authors, publication_year, primary_title, notes_abstract)
+  # select(record_id, authors, year, title, abstract) # For newer projects.
+  select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects. 
 
 secon_dis <- nrow(disagree2_df) # 39
 
@@ -168,8 +172,10 @@ kappa2(full_array)
 Studies for which  rater 1 flagged relevant and rater 2 flagged irrelevant.
 
 ```{r}
+# Here, note that ASReview updated their default column names late-2021. Choose the relevant mutate() option for your data.
 disagree2_df %>% 
-  mutate(publication_year = str_remove_all(publication_year, "///")) %>% 
+  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # For older projects.
+  # mutate(publication_year = str_remove_all(year, "///")) %>% # For newer projects.
 kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
@@ -184,8 +190,10 @@ kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
 Studies for which  rater 2 flagged relevant and rater 1 flagged irrelevant.
 
 ```{r}
+# Here, note that ASReview updated their default column names late-2021. Choose the relevant mutate() option for your data.
 disagree1_df %>% 
-  mutate(publication_year = str_remove_all(publication_year, "///")) %>% 
+  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # For older projects.
+  # mutate(publication_year = str_remove_all(year, "///")) %>% # For newer projects.
 kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
