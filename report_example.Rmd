@@ -172,11 +172,12 @@ kappa2(full_array)
 Studies for which  rater 1 flagged relevant and rater 2 flagged irrelevant.
 
 ```{r}
-# Here, note that ASReview updated their default column names late-2021. Choose the relevant mutate() option for your data.
+# Here, note that ASReview updated their default column names late-2021. 
+# If your project is newer (late-2021 onward) then comment out the mutate() line.
+
 disagree2_df %>% 
-  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # For older projects.
-  # mutate(year = str_remove_all(year, "///")) %>% # For newer projects.
-  kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
+  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
+  kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
 ```
@@ -190,10 +191,11 @@ disagree2_df %>%
 Studies for which  rater 2 flagged relevant and rater 1 flagged irrelevant.
 
 ```{r}
-# Here, note that ASReview updated their default column names late-2021. Choose the relevant mutate() option for your data.
+# Here, note that ASReview updated their default column names late-2021. 
+# If your project is newer (late-2021 onward) then comment out the mutate() line.
+
 disagree1_df %>% 
-  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # For older projects.
-  # mutate(year = str_remove_all(year, "///")) %>% # For newer projects.
+  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
