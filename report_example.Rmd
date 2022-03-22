@@ -3,10 +3,12 @@ title: "ASReview report"
 author: "Samuel Langton"
 date: "3 January 2022"
 output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
   html_document:
-    toc: true
+    toc: yes
     toc_depth: 3
-
 ---
 
 ```{r setup, include=FALSE}
