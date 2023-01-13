@@ -58,7 +58,7 @@ first_irrelevant_vec <- first_rec_df %>%
 
 disagree1_df <- secon_rec_df %>% 
   filter(included == 1, record_id %in% first_irrelevant_vec) %>% 
-  select(record_id, first_authors, publication_year, primary_title, , notes_abstract)
+  select(record_id, first_authors, publication_year, primary_title, notes_abstract)
 
 first_dis <- nrow(disagree1_df) # 6
 
@@ -70,7 +70,7 @@ secon_irrelevant_vec <- secon_rec_df %>%
 
 disagree2_df <- first_rec_df %>% 
   filter(included == 1, record_id %in% secon_irrelevant_vec) %>% 
-  select(record_id, first_authors, publication_year, primary_title, , notes_abstract)
+  select(record_id, first_authors, publication_year, primary_title, notes_abstract)
 
 secon_dis <- nrow(disagree2_df) # 39
 

@@ -3,9 +3,9 @@ title: "ASReview report"
 author: "Samuel Langton"
 date: "3 January 2022"
 output:
-  word_document:
-    toc: yes
-    toc_depth: '3'
+  # word_document:
+  #   toc: yes
+  #   toc_depth: '3'
   html_document:
     toc: yes
     toc_depth: 3
@@ -152,6 +152,47 @@ missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[[1]]
 | % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
 | n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
 | n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
+
+```{r irrdatasave}
+irr_df <- tibble(
+  ` ` = c("n uploaded", 
+                "n reviewed",
+                "% reviewed",
+                "n flagged relevant",
+                "n flagged irrelevant",
+                "% flagged relevant",
+                "n unreviewed",
+                "n total irrelevant",
+                "% total relevant",
+                "n relevant v. irrelevant",
+                "n relevant v. unreviewed"),
+  `rater 1` = c(nrow(first_df),
+                first_total,
+                first_prev,
+                first_rele,
+                first_irre,
+                first_pfrel,
+                first_unrev,
+                first_trele,
+                first_ptrel,
+                first_dis,
+                missed1),
+  `rater 2` = c(nrow(secon_df),
+                secon_total,
+                secon_prev,
+                secon_rele,
+                secon_irre,
+                secon_pfrel,
+                secon_unrev,
+                secon_trele,
+                secon_ptrel,
+                secon_dis,
+                missed2)
+  )
+
+write_csv(x = irr_df, file = "data/irr_table.csv")
+
+```
 
 # Kappa
 

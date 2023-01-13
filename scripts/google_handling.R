@@ -13,6 +13,10 @@ asreview_clean_df <- read_csv("data/asreview_clean.csv")
 # Load Google search results.
 google_df <- read_csv("data/google_results.csv")
 
+# How many?
+nrow(google_df)
+nrow(asreview_clean_df)
+
 # Simplify google for easier comaprison.
 google_df <- google_df %>% 
   mutate(id = 1:nrow(.)) %>% 
