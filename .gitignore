@@ -1,6 +1,7 @@
 # Data
 data/*
 !data/text_doc.txt
+!data/irr_table.csv
 literature/*
 
 # History files
