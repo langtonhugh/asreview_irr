@@ -36,6 +36,12 @@ google_relevant_clean_df <- google_relevant_df %>%
 relevant_clean_df <- asr_relevant_clean_df %>% 
   bind_rows(google_relevant_clean_df) %>%
   mutate(journal = str_to_title(journal)) 
-  
+
+# How many?
+nrow(relevant_clean_df) # 182
+
+count(relevant_clean_df, database)
+
+
 # Save. This is then 'Save As' an Excel workbook for manual data input for the full-text eligibility stage.
 write_csv(x = relevant_clean_df, file = "data/asr_google_relevant.csv")
