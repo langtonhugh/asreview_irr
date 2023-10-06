@@ -1,7 +1,5 @@
 ---
 title: "ASReview report"
-# author: "Samuel Langton"
-# date: "3 January 2022"
 output:
   # word_document:
   #   toc: yes
