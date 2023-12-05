@@ -59,14 +59,13 @@ secon_pfrel <- round(100*secon_rele/secon_total, 2)
 
 # Recode 'not rated' as irrelevant in each data frame.
 first_rec_df <- first_df %>%
-  mutate(included = if_else(is.na(included), true = 0, false = included))
+  mutate(included_rec = if_else(is.na(included), true = 0, false = included))
 
 secon_rec_df <- secon_df %>%
-  mutate(included = if_else(is.na(included), true = 0, false = included))
+  mutate(included_rec = if_else(is.na(included), true = 0, false = included))
 
 
 # Disagreements 1: first coder says irrelevant, second coder says relevant.
-
 first_irrelevant_vec <- first_rec_df %>% 
   filter(included == 0) %>% 
   pluck("record_id")
@@ -109,11 +108,13 @@ full_array <- cbind(first_vec, secon_vec)
 
 # Identify those which each reviewer did not even look at.
 first_dist_vec <- first_rec_df %>% 
-  filter(included == 3) %>% 
+  # filter(included == 3) %>% 5 Dec 2023 change.
+  filter(is.na(included)) %>%
   pluck("record_id")
 
 secon_dist_vec <- secon_rec_df %>% 
-  filter(included == 3) %>% 
+  # filter(included == 3) %>% 5 Dec 2023 change.
+  filter(is.na(included)) %>%
   pluck("record_id")
 
 # Identify those relevant by one rather, and unreviewed by the other.
