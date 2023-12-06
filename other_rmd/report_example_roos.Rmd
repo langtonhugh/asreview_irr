@@ -22,8 +22,8 @@ library(kableExtra)
 
 ```{r start}
 # Load data.
-first_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
-secon_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
+first_df <- read_csv("asreview_dataset_citizen-satisfaction-with-police-contact-after-citizen-initiated-contact-a-scoping-review-.csv")
+secon_df <- read_delim("asreview_dataset_all_literature-review-citizen-satisfaction-with-police_2nd_reviewer.csv", delim = ";")
 
 # Total reviewed.
 first_total <- table(first_df$included)[[2]] + table(first_df$included)[[1]]
@@ -73,8 +73,8 @@ first_irrelevant_vec <- first_rec_df %>%
 # Here, note that ASReview updated their default column names late-2021. Choose the relevant select() option for your data.
 disagree1_df <- secon_rec_df %>% 
   filter(included == 1, record_id %in% first_irrelevant_vec) %>% 
-  # select(record_id, authors, year, title, abstract) # For newer projects.
-  select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
+  select(record_id, authors, year, title, abstract) # For newer projects.
+  #select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
 
 first_dis <- nrow(disagree1_df) # 6
 
@@ -87,8 +87,8 @@ secon_irrelevant_vec <- secon_rec_df %>%
 # Here, note that ASReview updated their default column names late-2021. Choose the relevant select() option for your data.
 disagree2_df <- first_rec_df %>% 
   filter(included == 1, record_id %in% secon_irrelevant_vec) %>% 
-  # select(record_id, authors, year, title, abstract) # For newer projects.
-  select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
+  select(record_id, authors, year, title, abstract) # For newer projects.
+  # select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
 
 secon_dis <- nrow(disagree2_df) # 39
 
@@ -218,7 +218,7 @@ Studies for which  rater 1 flagged relevant and rater 2 flagged irrelevant.
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 
 disagree2_df %>% 
-  # mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
+  #mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
@@ -237,7 +237,7 @@ Studies for which  rater 2 flagged relevant and rater 1 flagged irrelevant.
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 
 disagree1_df %>% 
-  # mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
+  #mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
