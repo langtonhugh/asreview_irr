@@ -191,19 +191,17 @@ table2_summary_df <- count(compare_df, agreement_number) %>%
   rename(Description = stat)
 
 kable(table2_summary_df)
+
 ```
 
-<!-- - Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles, of which (s)he found `r first_rele` relevant. -->
-<!-- - Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles, of which (s)he found `r secon_rele` relevant. -->
-<!-- - The reviewers evaluated xxx of the same articles. Of these articles there was 81.9% agreement on the evaluation of them. -->
+# Written explanations 
 
-<!-- - 416/612 both evaluated as irrelevant, 85/612 both evaluated as relevant, and 111/612 evaluated one as relevant and xxx as irrelevant.  -->
-<!-- - In total 905/15530 articles were evaluated by at least one of the reviewers.   -->
-<!--  - Reviewer A evaluated 191 articles (803-612) that Reviewer B did not evaluated. Of the 191 articles, Reviewer A evaluated 15 of these unseen articles by Reviewer B as relevant. -->
-<!-- - Reviewer B evaluated 102 articles (714-612) that Reviewer A did not evaluated. Of the 102 articles, Reviewer B evaluated 0 of these unseen articles by Reviewer A as relevant. -->
-<!--  - Reviewer A evaluated 131 (131-0) of the 131 relevant articles of Reviewer B, Reviewer A disagreed on 65: (s)he evaluated 65 of these as irrelevant. Reviewer A agreed on 66 (131-65-0): both reviewers thought these articles were relevant. All unevaluated articles by Reviewer A, in this case 0, were evaluated relevant by Reviewer B. -->
-<!-- - Reviewer B evaluated 150 (165-15) of the 165 relevant articles of Reviewer A, Reviewer B disagreed on 46: (s)he evaluated 46 as irrelevant. Reviewer B agreed on 104 (165-46-15): both reviewers thought these articles were relevant. All unevaluated articles by Reviewer B, in this case 15, were evaluated relevant by Reviewer A.   -->
-
+- Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles (`r first_prev`%), of which (s)he flagged `r first_rele` as relevant and `r first_irre` as irrelevant.
+- Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles (`r secon_prev`%), of which (s)he flagged `r secon_rele` as relevant and `r secon_irre` as irrelevant.
+- Rater A left a total of `r first_unrev` articles unreviewed, while rater B left `r secon_unrev` unreviewed. In other words, these articles lay beyond the 'stop rule' and were never seen by the raters.
+- Rater B flagged `r missed2` article(s) as relevant that rater B never reviewed because it lay beyond the stop rule. This figure for Rater A was `r missed1`. 
+- The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
+- Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
 
 ```{r irrdatasave}
 irr_df <- tibble(
@@ -248,7 +246,7 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 
 # Kappa
 
-The level of agreement between rater A and rater B, assuming that unreviewed articles are irrelevant, is the following:
+The level of agreement between rater A and rater B is the following:
 
 ```{r}
 agree(full_array)
