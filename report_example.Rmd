@@ -7,6 +7,8 @@ output:
   html_document:
     toc: yes
     toc_depth: 3
+    number_sections: true
+    theme: united
 ---
 
 ```{r setup, include=FALSE}
@@ -65,26 +67,35 @@ secon_rec_df <- secon_df %>%
   mutate(included_rec = if_else(is.na(included), true = 0, false = included))
 
 
-# Disagreements 1: first coder says irrelevant, second coder says relevant.
+# Disagreements 1: Second coder says relevant, first coder says irrelevant
 first_irrelevant_vec <- first_rec_df %>% 
   filter(included == 0) %>% 
   pluck("record_id")
 
-# Here, note that ASReview updated their default column names late-2021. Choose the relevant select() option for your data.
+# Choose the relevant select() option for your data.
 disagree1_df <- secon_rec_df %>% 
   filter(included == 1, record_id %in% first_irrelevant_vec) %>% 
   # select(record_id, authors, year, title, abstract) # For newer projects.
   select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
 
-first_dis <- nrow(disagree1_df) # 6
+first_dis <- nrow(disagree1_df) # 5
 
-# Disagreement 2: second coder says irrelevant, first coder says relevant.
+# # Temp test.
+# first_relevant_vec <- first_rec_df %>% 
+#   filter(included == 1) %>% 
+#   pluck("record_id")
+# 
+# disagree1a_df <- secon_rec_df %>% 
+#   filter(included == 0, record_id %in% first_relevant_vec) %>% 
+#   # select(record_id, authors, year, title, abstract) # For newer projects.
+#   select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
 
+# Disagreement 2: First coder says relevant, second coder says irrelevant, 
 secon_irrelevant_vec <- secon_rec_df %>% 
   filter(included == 0) %>% 
   pluck("record_id")
 
-# Here, note that ASReview updated their default column names late-2021. Choose the relevant select() option for your data.
+# Choose the relevant select() option for your data.
 disagree2_df <- first_rec_df %>% 
   filter(included == 1, record_id %in% secon_irrelevant_vec) %>% 
   # select(record_id, authors, year, title, abstract) # For newer projects.
@@ -149,7 +160,7 @@ missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[["not missed"]]
 | n unreviewed             | `r first_unrev`    | `r secon_unrev`    |
 | n total irrelevant       | `r first_trele`    | `r secon_trele`    |
 | % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
-| n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
+| n relevant v. irrelevant | `r secon_dis`      | `r first_dis`      | 
 | n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
 
 # Overall summary
@@ -172,7 +183,7 @@ first_secon_review_df <- bind_rows(first_df, secon_df) %>%
 # Create summary table.
 compare_df <- first_secon_review_df %>% 
   # group_by(record_id, title) %>%       # add if needed. 
-  group_by(record_id, primary_title) %>% # comment out if needed.
+  group_by(record_id, first_authors, publication_year, primary_title, notes_abstract) %>% # comment out if needed.
   summarise(agreement_number = sum(included_new)) %>% 
   ungroup()
 
@@ -201,7 +212,7 @@ kable(table2_summary_df)
 - Rater A left a total of `r first_unrev` articles unreviewed, while rater B left `r secon_unrev` unreviewed. In other words, these articles lay beyond the 'stop rule' and were never seen by the raters.
 - Rater B flagged `r missed2` article(s) as relevant that rater B never reviewed because it lay beyond the stop rule. This figure for Rater A was `r missed1`. 
 - The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
-- Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
+- Rater A flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r first_dis` articles as relevant that rater B flagged as irrelevant.
 
 ```{r irrdatasave}
 irr_df <- tibble(
@@ -259,6 +270,23 @@ kappa2(full_array)
 ```
 
 # Disagreements
+
+## Relevant versus unreviewed
+
+If there are any, the following are the articles for which one rater flagged 'relevant' and the other did not review it because it lay beyond the stop rule.
+
+```{r}
+if (missed1 == 0 & missed2 == 0) {
+  print("There were no articles for which one rater flagged 'relevant' and the other did not review it.")
+} else {
+  compare_df %>% 
+    filter(agreement_number == 1001) %>%
+    select(-agreement_number) %>% 
+    kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
+  kable_styling()
+  
+}
+```
 
 ## Rater A
 
