@@ -1,4 +1,4 @@
- ,rater 1,rater 2
+ ,rater A,rater B
 n uploaded,3103,3103
 n reviewed,489,535
 % reviewed,15.76,17.24
@@ -9,4 +9,4 @@ n unreviewed,2614,2568
 n total irrelevant,2988,3021
 % total relevant,3.71,2.64
 n relevant v. irrelevant,5,39
-n relevant v. unreviewed,0,0
+n relevant v. unreviewed,0,1

@@ -126,7 +126,7 @@ first_dist_df <- first_rec_df %>%
 
 secon_dist_df <- secon_rec_df %>% 
   filter(included == 1) %>% 
-  mutate(missed = if_else(record_id %in% secon_dist_vec,
+  mutate(missed = if_else(record_id %in% first_dist_vec,
                           "missed",
                           "not missed"))
 
@@ -136,9 +136,9 @@ missed1 <- nrow(first_dist_df) - table(first_dist_df$missed)[["not missed"]]
 missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[["not missed"]]
 ```
 
-# Summary
+# Table summary
 
-|                          | rater 1            | rater 2            |
+|                          | rater A            | rater B            |
 | ------------------------ |:------------------:| ------------------:|
 | n uploaded               | `r nrow(first_df)` | `r nrow(secon_df)` |
 | n reviewed               | `r first_total`    | `r secon_total`    |
@@ -151,6 +151,20 @@ missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[["not missed"]]
 | % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
 | n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
 | n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
+
+<!-- # Written summary -->
+
+<!-- - Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles, of which (s)he found `r first_rele` relevant. -->
+<!-- - Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles, of which (s)he found `r secon_rele` relevant. -->
+<!-- - The reviewers evaluated xxx of the same articles. Of these articles there was 81.9% agreement on the evaluation of them. -->
+
+<!-- - 416/612 both evaluated as irrelevant, 85/612 both evaluated as relevant, and 111/612 evaluated one as relevant and xxx as irrelevant.  -->
+<!-- - In total 905/15530 articles were evaluated by at least one of the reviewers.   -->
+<!--  - Reviewer A evaluated 191 articles (803-612) that Reviewer B did not evaluated. Of the 191 articles, Reviewer A evaluated 15 of these unseen articles by Reviewer B as relevant. -->
+<!-- - Reviewer B evaluated 102 articles (714-612) that Reviewer A did not evaluated. Of the 102 articles, Reviewer B evaluated 0 of these unseen articles by Reviewer A as relevant. -->
+<!--  - Reviewer A evaluated 131 (131-0) of the 131 relevant articles of Reviewer B, Reviewer A disagreed on 65: (s)he evaluated 65 of these as irrelevant. Reviewer A agreed on 66 (131-65-0): both reviewers thought these articles were relevant. All unevaluated articles by Reviewer A, in this case 0, were evaluated relevant by Reviewer B. -->
+<!-- - Reviewer B evaluated 150 (165-15) of the 165 relevant articles of Reviewer A, Reviewer B disagreed on 46: (s)he evaluated 46 as irrelevant. Reviewer B agreed on 104 (165-46-15): both reviewers thought these articles were relevant. All unevaluated articles by Reviewer B, in this case 15, were evaluated relevant by Reviewer A.   -->
+
 
 ```{r irrdatasave}
 irr_df <- tibble(
@@ -165,7 +179,7 @@ irr_df <- tibble(
                 "% total relevant",
                 "n relevant v. irrelevant",
                 "n relevant v. unreviewed"),
-  `rater 1` = c(nrow(first_df),
+  `rater A` = c(nrow(first_df),
                 first_total,
                 first_prev,
                 first_rele,
@@ -176,7 +190,7 @@ irr_df <- tibble(
                 first_ptrel,
                 first_dis,
                 missed1),
-  `rater 2` = c(nrow(secon_df),
+  `rater B` = c(nrow(secon_df),
                 secon_total,
                 secon_prev,
                 secon_rele,
@@ -195,7 +209,7 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 
 # Kappa
 
-The level of agreement between rater 1 and rater 2, assuming that unreviewed articles are irrelevant, is the following:
+The level of agreement between rater A and rater B, assuming that unreviewed articles are irrelevant, is the following:
 
 ```{r}
 agree(full_array)
@@ -209,9 +223,9 @@ kappa2(full_array)
 
 # Disagreements
 
-## Rater 1
+## Rater A
 
-Studies for which  rater 1 flagged relevant and rater 2 flagged irrelevant.
+Studies for which  rater A flagged relevant and rater B flagged irrelevant.
 
 ```{r}
 # Here, note that ASReview updated their default column names late-2021. 
@@ -228,9 +242,9 @@ disagree2_df %>%
 
 <br>
 
-## Rater 2
+## Rater B
 
-Studies for which  rater 2 flagged relevant and rater 1 flagged irrelevant.
+Studies for which  rater B flagged relevant and rater A flagged irrelevant.
 
 ```{r}
 # Here, note that ASReview updated their default column names late-2021. 

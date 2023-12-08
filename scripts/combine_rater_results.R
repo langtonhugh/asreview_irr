@@ -1,15 +1,19 @@
 # Load packages.
 library(dplyr)
+library(readr)
 
 # Load data.
-first_df <- read.csv("asreview_dataset_citizen-satisfaction-with-police-contact-after-citizen-initiated-contact-a-scoping-review-.csv", sep = ",", na.strings = "")
-secon_df <- read.csv("asreview_dataset_all_literature-review-citizen-satisfaction-with-police_2nd_reviewer.csv", sep = ";", na.strings = "")
+# first_df <- read.csv("asreview_dataset_citizen-satisfaction-with-police-contact-after-citizen-initiated-contact-a-scoping-review-.csv", sep = ",", na.strings = "")
+# secon_df <- read.csv("asreview_dataset_all_literature-review-citizen-satisfaction-with-police_2nd_reviewer.csv", sep = ";", na.strings = "")
+first_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
+secon_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
 
-# Remove the notes col.
+
+# Remove the notes col
 secon_df <- secon_df %>% 
-  select(-exported_notes_1) %>% 
-  mutate(rater_id = 2) %>% 
-  rename(record_id = `ï..record_id`)
+  # select(-exported_notes_1) %>%      # add if needed.
+  mutate(rater_id = 2) 
+  # rename(record_id = `ï..record_id`) # add if needed.
 
 # Create rater id for the first rater.
 first_df <- first_df %>% 
@@ -21,7 +25,8 @@ first_secon_review_df <- bind_rows(first_df, secon_df) %>%
 
 # Create summary table.
 compare_df <- first_secon_review_df %>% 
-  group_by(record_id, title) %>% 
+  # group_by(record_id, title) %>%       # add if needed. 
+  group_by(record_id, primary_title) %>% # comment out if needed.
   summarise(agreement_number = sum(included_new))
 
 # Check counts.
