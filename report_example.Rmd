@@ -9,6 +9,7 @@ output:
     toc_depth: 3
     number_sections: true
     theme: united
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
