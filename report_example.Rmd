@@ -136,7 +136,7 @@ missed1 <- nrow(first_dist_df) - table(first_dist_df$missed)[["not missed"]]
 missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[["not missed"]]
 ```
 
-# Table summary
+# Rater summary
 
 |                          | rater A            | rater B            |
 | ------------------------ |:------------------:| ------------------:|
@@ -152,7 +152,46 @@ missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[["not missed"]]
 | n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
 | n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
 
-<!-- # Written summary -->
+# Overall summary
+
+```{r additionaltable}
+# Remove the notes col
+secon_df <- secon_df %>% 
+  # select(-exported_notes_1) %>%      # add if needed.
+  mutate(rater_id = 2) 
+  # rename(record_id = `ï..record_id`) # add if needed.
+
+# Create rater id for the first rater.
+first_df <- first_df %>% 
+  mutate(rater_id = 1)
+
+# Bind together.
+first_secon_review_df <- bind_rows(first_df, secon_df) %>% 
+  mutate(included_new = if_else(is.na(included), 1000, included))
+
+# Create summary table.
+compare_df <- first_secon_review_df %>% 
+  # group_by(record_id, title) %>%       # add if needed. 
+  group_by(record_id, primary_title) %>% # comment out if needed.
+  summarise(agreement_number = sum(included_new)) %>% 
+  ungroup()
+
+# Check counts.
+
+
+# Summary table.
+table2_summary_df <- count(compare_df, agreement_number) %>%
+  mutate(stat = ifelse(agreement_number == 0   , "Both rated irrelevant"                      , NA),
+         stat = ifelse(agreement_number == 1   , "One rated relevant, other irrelevant"       , stat),
+         stat = ifelse(agreement_number == 2   , "Both rated relevant"                        , stat),
+         stat = ifelse(agreement_number == 1000, "One rated irrelevant, other left unreviewed", stat),
+         stat = ifelse(agreement_number == 1001, "One rated relevant, other left unreviewed"  , stat),
+         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>% 
+  select(stat, n) %>% 
+  rename(Description = stat)
+
+kable(table2_summary_df)
+```
 
 <!-- - Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles, of which (s)he found `r first_rele` relevant. -->
 <!-- - Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles, of which (s)he found `r secon_rele` relevant. -->

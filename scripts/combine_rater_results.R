@@ -27,7 +27,22 @@ first_secon_review_df <- bind_rows(first_df, secon_df) %>%
 compare_df <- first_secon_review_df %>% 
   # group_by(record_id, title) %>%       # add if needed. 
   group_by(record_id, primary_title) %>% # comment out if needed.
-  summarise(agreement_number = sum(included_new))
+  summarise(agreement_number = sum(included_new)) %>% 
+  ungroup()
 
 # Check counts.
-table(compare_df$agreement_number)
+
+
+# Summary table.
+table2_summary_df <- count(compare_df, agreement_number) %>%
+  mutate(stat = ifelse(agreement_number == 0   , "Both rated irrelevant"                      , NA),
+         stat = ifelse(agreement_number == 1   , "One rated relevant, other irrelevant"       , stat),
+         stat = ifelse(agreement_number == 2   , "Both rated relevant"                        , stat),
+         stat = ifelse(agreement_number == 1000, "One rated irrelevant, other left unreviewed", stat),
+         stat = ifelse(agreement_number == 1001, "One rated relevant, other left unreviewed"  , stat),
+         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>% 
+  select(stat, n) %>% 
+  rename(Description = stat)
+
+
+
