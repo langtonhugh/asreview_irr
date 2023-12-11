@@ -13,4 +13,4 @@ The report also identifies the number of cases in which there was disagreement '
 
 The report is a work in progress. I would appreciate any checks, feedback, comparisons to your own findings, and suggestions for other features the report could include.
 
-Thanks to Amy Nivette, Amina op de Weegh, Stijn Ruiter, and the ASReview team for feedback on improving this report.
+Thanks to Roos Jansen, Amy Nivette, Amina op de Weegh, Stijn Ruiter, and the ASReview team for feedback on improving this report.
