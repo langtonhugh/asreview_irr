@@ -12,6 +12,9 @@ output:
     toc_float: true
 ---
 
+This report is an example of the output from an [open source tool](https://github.com/langtonhugh/asreview_irr) which makes it easier to compare the decisions by two raters after screening literature samples in [ASReview](https://asreview.nl/). The report can be created automatically using the .csv files downloaded directly from the ASReview dashboard. The report is a work-in-progress. If you are an R user, please take a look at the [source code](https://github.com/langtonhugh/asreview_irr/blob/main/report_example.Rmd). You should be able to get it running without much R experience, but feel free to [email me](https://www.samlangton.info/) for help. Feedback and suggestions for additional features are welcome!
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, warning = F, message = F)
 # Load packages.
@@ -21,9 +24,10 @@ library(stringr)
 library(purrr)
 library(irr)
 library(kableExtra)
+library(waffle)
 ```
 
-```{r start, results=F}
+```{r start}
 # Load data.
 first_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
 secon_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
@@ -109,7 +113,7 @@ first_dist_vec <- first_df %>%
   pluck("record_id")
 
 # Check. This should be TRUE.
-length(first_dist_vec) == first_unrev
+# length(first_dist_vec) == first_unrev
 
 # Identify left unreviewed by rater 2.
 secon_dist_vec <- secon_df %>% 
@@ -117,7 +121,7 @@ secon_dist_vec <- secon_df %>%
   pluck("record_id")
 
 # Check. This should be TRUE.
-length(secon_dist_vec) == secon_unrev
+# length(secon_dist_vec) == secon_unrev
 
 # Create flag for those identified as relevant by first rater, but not reviewed
 # by second.
@@ -133,7 +137,7 @@ first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Frequency counts.
-table(first_dist_df$missed_flag_fac)
+# table(first_dist_df$missed_flag_fac)
 
 # Create flag for those identified as relevant by second rater, but not reviewed
 # by second.
@@ -149,7 +153,7 @@ secon_dist_df$missed_flag_fac <- factor(secon_dist_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Frequency counts.
-table(secon_dist_df$missed_flag_fac)
+# table(secon_dist_df$missed_flag_fac)
 
 # Create vectors with numbers of missed for the table.
 missed1 <- table(first_dist_df$missed_flag_fac)[["missed"]]
@@ -260,12 +264,7 @@ both_raters_df <- table2_summary_df %>%
 table2_summary_complete_df <- table2_summary_df %>% 
   bind_rows(both_raters_df)
 
-
-
 kable(table2_summary_complete_df)
-
-
-
 ```
 
 # Written explanations 
@@ -277,6 +276,76 @@ kable(table2_summary_complete_df)
 - The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
 - Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
 - Here, the number of decisions eligible for the Kappa statistic is defined as the _both raters made decision_ figure. This is the sum of _both rated irrelevant_, _one rated relevant, other irrelevant_  and _both rated relevant_. By default, then, the Kappa reported here does not include abstracts for which _one rated relevant, other left unreviewed_. 
+
+# Visual summary
+
+## Proportional breakdown
+
+<center>
+
+```{r, propbreakdown}
+first_secon_review_df %>% 
+  group_by(rater_id, included_new) %>% 
+  summarize(freq = n()) %>%
+  mutate(rater_id     = if_else(rater_id == 1, "Rater A", "Rater B"),
+         included_var = recode(included_new,
+                               `0`    = "Irrelevant",
+                               `1`    = "Relevant"  ,
+                               `1000` = "Unreviewed")) %>% 
+  ggplot(data = .) +
+  geom_waffle(mapping = aes(fill = included_var, values = freq),
+              color = "white", make_proportional = TRUE, n_rows = 5,
+              alpha = 0.7, 
+              size = 0.5) +
+  facet_wrap(~rater_id, ncol = 1) +
+  theme_void() +
+  theme(axis.text  = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, size = 12),
+        legend.text = element_text(size = 9)) +
+  labs(fill = NULL,
+       title = "1 square = 1% of sample \n") +
+  scale_fill_brewer(palette = "Set1") +
+  coord_fixed(ratio = 1)
+```
+
+</center> 
+
+## Rater overlap
+
+<center>
+
+```{r, overlap}
+count(compare_df, agreement_number) %>%
+  mutate(stat = ifelse(agreement_number == 0   , "Both rated irrelevant"                      , NA),
+         stat = ifelse(agreement_number == 1   , "One rated relevant, other irrelevant"       , stat),
+         stat = ifelse(agreement_number == 2   , "Both rated relevant"                        , stat),
+         stat = ifelse(agreement_number == 1000, "One rated irrelevant, other left unreviewed", stat),
+         stat = ifelse(agreement_number == 1001, "One rated relevant, other left unreviewed"  , stat),
+         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>% 
+  select(stat, n) %>% 
+  rename(Description = stat) %>% 
+  ggplot(data = .) +
+  geom_waffle(mapping = aes(fill = Description, values = n),
+              make_proportional = FALSE,
+              n_rows = 60,
+              size = 0.5,
+              alpha = 0.9,
+              colour = "white",
+              flip = TRUE)  +
+  theme_void() +
+  labs(fill = NULL, title = "1 square = 1 article") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "right",
+        axis.ticks = element_blank(),
+        axis.text  = element_blank(),
+        plot.title = element_text(hjust = 0.5,size = 12),
+        legend.text = element_text(size = 9)) +
+  coord_fixed(ratio = 1)
+```
+
+</center>
 
 # Kappa
 

@@ -1,7 +1,9 @@
 # Data
 data/*
 !data/text_doc.txt
-!data/irr_table.csv
+!data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv
+!data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv
+
 literature/*
 
 # History files
