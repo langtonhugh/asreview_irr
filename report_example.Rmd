@@ -23,22 +23,22 @@ library(irr)
 library(kableExtra)
 ```
 
-```{r start}
+```{r start, results=F}
 # Load data.
 first_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
 secon_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
 
 # Total reviewed.
-first_total <- table(first_df$included)[[2]] + table(first_df$included)[[1]]
-secon_total <- table(secon_df$included)[[2]] + table(secon_df$included)[[1]]
+first_total <- table(first_df$included)[["1"]] + table(first_df$included)[["0"]]
+secon_total <- table(secon_df$included)[["1"]] + table(secon_df$included)[["0"]]
 
 # Relevant flags.
-first_rele <- table(first_df$included)[[2]]
-first_irre <- table(first_df$included)[[1]]
+first_rele <- table(first_df$included)[["1"]]
+first_irre <- table(first_df$included)[["0"]]
 
 # Irrelevant flags.
-secon_rele <- table(secon_df$included)[[2]]
-secon_irre <- table(secon_df$included)[[1]]
+secon_rele <- table(secon_df$included)[["1"]]
+secon_irre <- table(secon_df$included)[["0"]]
 
 # Not reviewed
 first_unrev <- sum(is.na(first_df$included))
@@ -48,174 +48,116 @@ secon_unrev <- sum(is.na(secon_df$included))
 first_prev <- round(100*first_total/nrow(first_df), 2)
 secon_prev <- round(100*secon_total/nrow(secon_df), 2)
 
-# Total irrelevant.
+# Total 'irrelevant' (if we define un-reviewed as irrelevant)
 first_trele <- first_irre + first_unrev
 secon_trele <- secon_irre + secon_unrev
 
-# % total relevant.
+# % total relevant out of all articles uploaded to asreview.
 first_ptrel <- round(100*first_rele/nrow(first_df), 2)
 secon_ptrel <- round(100*secon_rele/nrow(secon_df), 2)
 
-# % flagged relevant.
+# % flagged relevant (out of those reviewed).
 first_pfrel <- round(100*first_rele/first_total, 2)
 secon_pfrel <- round(100*secon_rele/secon_total, 2)
 
-# Recode 'not rated' as irrelevant in each data frame.
-first_rec_df <- first_df %>%
-  mutate(included_rec = if_else(is.na(included), true = 0, false = included))
-
-secon_rec_df <- secon_df %>%
-  mutate(included_rec = if_else(is.na(included), true = 0, false = included))
-
-
-# Disagreements 1: Second coder says relevant, first coder says irrelevant
-first_irrelevant_vec <- first_rec_df %>% 
-  filter(included == 0) %>% 
+# Disagreements 1: first coder says relevant, second coder says irrelevant.
+first_relevant_vec <- first_df %>%
+  filter(included == 1) %>%
   pluck("record_id")
 
-# Choose the relevant select() option for your data.
-disagree1_df <- secon_rec_df %>% 
-  filter(included == 1, record_id %in% first_irrelevant_vec) %>% 
+disagree1_df <- secon_df %>%
+  filter(included == 0, record_id %in% first_relevant_vec) %>%
   # select(record_id, authors, year, title, abstract) # For newer projects.
   select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
 
-first_dis <- nrow(disagree1_df) # 5
+# Define how many disagreements for table.
+first_dis <- nrow(disagree1_df) # 39
 
-# # Temp test.
-# first_relevant_vec <- first_rec_df %>% 
-#   filter(included == 1) %>% 
-#   pluck("record_id")
-# 
-# disagree1a_df <- secon_rec_df %>% 
-#   filter(included == 0, record_id %in% first_relevant_vec) %>% 
-#   # select(record_id, authors, year, title, abstract) # For newer projects.
-#   select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
-
-# Disagreement 2: First coder says relevant, second coder says irrelevant, 
-secon_irrelevant_vec <- secon_rec_df %>% 
-  filter(included == 0) %>% 
+# Disagreement 2: second coder says relevant, first coder says irrelevant, 
+secon_relevant_vec <- secon_df %>% 
+  filter(included == 1) %>% 
   pluck("record_id")
 
-# Choose the relevant select() option for your data.
-disagree2_df <- first_rec_df %>% 
-  filter(included == 1, record_id %in% secon_irrelevant_vec) %>% 
+# Subset first rater's irrelevant list with those second rater said relevant.
+disagree2_df <- first_df %>% 
+  filter(included == 0, record_id %in% secon_relevant_vec) %>% 
   # select(record_id, authors, year, title, abstract) # For newer projects.
   select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
 
-secon_dis <- nrow(disagree2_df) # 39
+# Define how many disagreements for table.
+secon_dis <- nrow(disagree2_df) # 5
 
 # Sort and create vectors for Kappa.
-first_vec <- first_rec_df %>% 
+first_vec <- first_df %>% 
   arrange(record_id) %>% 
   pluck("included")
 
-secon_vec <- secon_rec_df %>% 
+secon_vec <- secon_df %>% 
   arrange(record_id) %>% 
   pluck("included")
 
-# Create array for Kappa.
+# Create array for Kappa. Note this still contains missings for those that 
+# one or both raters did not review. These are automatically removed in the stat.
+# Not that the actual Kappa test is run within the script later.
 full_array <- cbind(first_vec, secon_vec)
 
-# Further disgareement statistics.
+# Further disagreement statistics.
 
-# Identify those which each reviewer did not even look at.
-first_dist_vec <- first_rec_df %>% 
-  # filter(included == 3) %>% 5 Dec 2023 change.
+# Identify left unreviewed by rater 1.
+first_dist_vec <- first_df %>% 
   filter(is.na(included)) %>%
   pluck("record_id")
 
-secon_dist_vec <- secon_rec_df %>% 
-  # filter(included == 3) %>% 5 Dec 2023 change.
+# Check. This should be TRUE.
+length(first_dist_vec) == first_unrev
+
+# Identify left unreviewed by rater 2.
+secon_dist_vec <- secon_df %>% 
   filter(is.na(included)) %>%
   pluck("record_id")
 
-# Identify those relevant by one rather, and unreviewed by the other.
-first_dist_df <- first_rec_df %>% 
+# Check. This should be TRUE.
+length(secon_dist_vec) == secon_unrev
+
+# Create flag for those identified as relevant by first rater, but not reviewed
+# by second.
+first_dist_df <- first_df %>% 
   filter(included == 1) %>% 
-  mutate(missed = if_else(record_id %in% secon_dist_vec,
-                          "missed",
-                          "not missed"))
+  mutate(missed_flag = if_else(record_id %in% secon_dist_vec,
+                               "missed",
+                               "not missed"),
+         missed_flag = as.factor(missed_flag))
 
-secon_dist_df <- secon_rec_df %>% 
+# Define the factor levels so we get frequencies of zeros, if there.
+first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
+                                        levels = c("not missed", "missed"))
+
+# Frequency counts.
+table(first_dist_df$missed_flag_fac)
+
+# Create flag for those identified as relevant by second rater, but not reviewed
+# by second.
+secon_dist_df <- secon_df %>% 
   filter(included == 1) %>% 
-  mutate(missed = if_else(record_id %in% first_dist_vec,
+  mutate(missed_flag = if_else(record_id %in% first_dist_vec,
                           "missed",
-                          "not missed"))
+                          "not missed"),
+         missed_flag = as.factor(missed_flag))
 
-# How many studies did one rather say *relevcant* and the other reviewer
-# not even review?
-missed1 <- nrow(first_dist_df) - table(first_dist_df$missed)[["not missed"]]
-missed2 <- nrow(secon_dist_df) - table(secon_dist_df$missed)[["not missed"]]
+# Define the factor levels so we get frequencies of zeros, if there.
+secon_dist_df$missed_flag_fac <- factor(secon_dist_df$missed_flag,
+                                        levels = c("not missed", "missed"))
+
+# Frequency counts.
+table(secon_dist_df$missed_flag_fac)
+
+# Create vectors with numbers of missed for the table.
+missed1 <- table(first_dist_df$missed_flag_fac)[["missed"]]
+missed2 <- table(secon_dist_df$missed_flag_fac)[["missed"]]
 ```
-
-# Rater summary
-
-|                          | rater A            | rater B            |
-| ------------------------ |:------------------:| ------------------:|
-| n uploaded               | `r nrow(first_df)` | `r nrow(secon_df)` |
-| n reviewed               | `r first_total`    | `r secon_total`    |
-| % reviewed               | `r first_prev`     | `r secon_prev`     |
-| n flagged relevant       | `r first_rele`     | `r secon_rele`     |
-| n flagged irrelevant     | `r first_irre`     | `r secon_irre`     |
-| % flagged relevant       | `r first_pfrel`    | `r secon_pfrel`    |
-| n unreviewed             | `r first_unrev`    | `r secon_unrev`    |
-| n total irrelevant       | `r first_trele`    | `r secon_trele`    |
-| % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
-| n relevant v. irrelevant | `r secon_dis`      | `r first_dis`      | 
-| n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
-
-# Overall summary
-
-```{r additionaltable}
-# Remove the notes col
-secon_df <- secon_df %>% 
-  # select(-exported_notes_1) %>%      # add if needed.
-  mutate(rater_id = 2) 
-  # rename(record_id = `ï..record_id`) # add if needed.
-
-# Create rater id for the first rater.
-first_df <- first_df %>% 
-  mutate(rater_id = 1)
-
-# Bind together.
-first_secon_review_df <- bind_rows(first_df, secon_df) %>% 
-  mutate(included_new = if_else(is.na(included), 1000, included))
-
-# Create summary table.
-compare_df <- first_secon_review_df %>% 
-  # group_by(record_id, title) %>%       # add if needed. 
-  group_by(record_id, first_authors, publication_year, primary_title, notes_abstract) %>% # comment out if needed.
-  summarise(agreement_number = sum(included_new)) %>% 
-  ungroup()
-
-# Check counts.
-
-
-# Summary table.
-table2_summary_df <- count(compare_df, agreement_number) %>%
-  mutate(stat = ifelse(agreement_number == 0   , "Both rated irrelevant"                      , NA),
-         stat = ifelse(agreement_number == 1   , "One rated relevant, other irrelevant"       , stat),
-         stat = ifelse(agreement_number == 2   , "Both rated relevant"                        , stat),
-         stat = ifelse(agreement_number == 1000, "One rated irrelevant, other left unreviewed", stat),
-         stat = ifelse(agreement_number == 1001, "One rated relevant, other left unreviewed"  , stat),
-         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>% 
-  select(stat, n) %>% 
-  rename(Description = stat)
-
-kable(table2_summary_df)
-
-```
-
-# Written explanations 
-
-- Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles (`r first_prev`%), of which (s)he flagged `r first_rele` as relevant and `r first_irre` as irrelevant.
-- Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles (`r secon_prev`%), of which (s)he flagged `r secon_rele` as relevant and `r secon_irre` as irrelevant.
-- Rater A left a total of `r first_unrev` articles unreviewed, while rater B left `r secon_unrev` unreviewed. In other words, these articles lay beyond the 'stop rule' and were never seen by the raters.
-- Rater B flagged `r missed2` article(s) as relevant that rater B never reviewed because it lay beyond the stop rule. This figure for Rater A was `r missed1`. 
-- The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
-- Rater A flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r first_dis` articles as relevant that rater B flagged as irrelevant.
 
 ```{r irrdatasave}
+# This is just to save a nice table summary for a paper, not for the report.
 irr_df <- tibble(
   ` ` = c("n uploaded", 
                 "n reviewed",
@@ -255,6 +197,86 @@ irr_df <- tibble(
 write_csv(x = irr_df, file = "data/irr_table.csv")
 
 ```
+
+# Rater summary
+
+|                          | rater A            | rater B            |
+| ------------------------ |:------------------:| ------------------:|
+| n uploaded               | `r nrow(first_df)` | `r nrow(secon_df)` |
+| n reviewed               | `r first_total`    | `r secon_total`    |
+| % reviewed               | `r first_prev`     | `r secon_prev`     |
+| n flagged relevant       | `r first_rele`     | `r secon_rele`     |
+| n flagged irrelevant     | `r first_irre`     | `r secon_irre`     |
+| % flagged relevant       | `r first_pfrel`    | `r secon_pfrel`    |
+| n unreviewed             | `r first_unrev`    | `r secon_unrev`    |
+| n total irrelevant       | `r first_trele`    | `r secon_trele`    |
+| % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
+| n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
+| n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
+
+# Overall summary
+
+```{r additionaltable}
+# Remove the notes col
+secon_df <- secon_df %>% 
+  # select(-exported_notes_1) %>%      # add if needed.
+  mutate(rater_id = 2) 
+  # rename(record_id = `ï..record_id`) # add if needed.
+
+# Create rater id for the first rater.
+first_df <- first_df %>% 
+  mutate(rater_id = 1)
+
+# Bind together.
+first_secon_review_df <- bind_rows(first_df, secon_df) %>% 
+  mutate(included_new = if_else(is.na(included), 1000, included))
+
+# Create summary table.
+compare_df <- first_secon_review_df %>% 
+  # group_by(record_id, title) %>%       # add if needed. 
+  group_by(record_id, first_authors, publication_year, primary_title, notes_abstract) %>% # comment out if needed.
+  summarise(agreement_number = sum(included_new)) %>% 
+  ungroup()
+
+# Summary table.
+table2_summary_df <- count(compare_df, agreement_number) %>%
+  mutate(stat = ifelse(agreement_number == 0   , "Both rated irrelevant"                      , NA),
+         stat = ifelse(agreement_number == 1   , "One rated relevant, other irrelevant"       , stat),
+         stat = ifelse(agreement_number == 2   , "Both rated relevant"                        , stat),
+         stat = ifelse(agreement_number == 1000, "One rated irrelevant, other left unreviewed", stat),
+         stat = ifelse(agreement_number == 1001, "One rated relevant, other left unreviewed"  , stat),
+         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>% 
+  select(stat, n) %>% 
+  rename(Description = stat)
+
+both_raters_df <- table2_summary_df %>% 
+  filter(Description == "Both rated irrelevant" |
+         Description == "One rated relevant, other irrelevant" |
+         Description == "Both rated relevant") %>% 
+  # group_by(Description) %>% 
+  summarize(Description = "Both raters made decision",
+            n = sum(n))
+
+table2_summary_complete_df <- table2_summary_df %>% 
+  bind_rows(both_raters_df)
+
+
+
+kable(table2_summary_complete_df)
+
+
+
+```
+
+# Written explanations 
+
+- Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles (`r first_prev`%), of which (s)he flagged `r first_rele` as relevant and `r first_irre` as irrelevant.
+- Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles (`r secon_prev`%), of which (s)he flagged `r secon_rele` as relevant and `r secon_irre` as irrelevant.
+- Rater A left a total of `r first_unrev` articles unreviewed, while rater B left `r secon_unrev` unreviewed. In other words, these articles lay beyond the 'stop rule' and were never seen by the raters.
+- Rater A flagged `r missed1` article(s) as relevant that rater B left unreviewed. This figure for Rater B was `r missed2`. 
+- The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
+- Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
+- Here, the number of decisions eligible for the Kappa statistic is defined as the _both raters made decision_ figure. This is the sum of _both rated irrelevant_, _one rated relevant, other irrelevant_  and _both rated relevant_. By default, then, the Kappa reported here does not include abstracts for which _one rated relevant, other left unreviewed_. 
 
 # Kappa
 
@@ -297,7 +319,7 @@ Studies for which  rater A flagged relevant and rater B flagged irrelevant.
 # Here, note that ASReview updated their default column names late-2021. 
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 
-disagree2_df %>% 
+disagree1_df %>% 
   # mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   # scroll_box(width = "120%", height = "300px") %>% 
@@ -316,7 +338,7 @@ Studies for which  rater B flagged relevant and rater A flagged irrelevant.
 # Here, note that ASReview updated their default column names late-2021. 
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 
-disagree1_df %>% 
+disagree2_df %>% 
   # mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>% 
