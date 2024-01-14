@@ -374,7 +374,7 @@ if (missed1 == 0 & missed2 == 0) {
   compare_df %>% 
     filter(agreement_number == 1001) %>%
     select(-agreement_number) %>% 
-    mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only
+    mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
     kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   kable_styling()
   
@@ -388,7 +388,6 @@ Studies for which  rater A flagged relevant and rater B flagged irrelevant.
 ```{r}
 # Here, note that ASReview updated their default column names late-2021. 
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
-
 disagree1_df %>% 
   mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
