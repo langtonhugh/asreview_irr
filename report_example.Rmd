@@ -1,19 +1,18 @@
 ---
 title: "ASReview report"
 output:
-  # word_document:
-  #   toc: yes
-  #   toc_depth: '3'
   html_document:
-    toc: yes
+    toc: true
     toc_depth: 3
     number_sections: true
     theme: united
     toc_float: true
+  pdf_document:
+    toc: true
+    toc_depth: '3'
 ---
 
 This report is an example of the output from an [open source tool](https://github.com/langtonhugh/asreview_irr) which makes it easier to compare the decisions by two raters after screening literature samples in [ASReview](https://asreview.nl/). The report can be created automatically using the .csv files downloaded directly from the ASReview dashboard. The report is a work-in-progress. If you are an R user, please take a look at the [source code](https://github.com/langtonhugh/asreview_irr/blob/main/report_example.Rmd). Checks, feedback and suggestions for additional features are welcome. You can find my contact details on [my website](https://www.samlangton.info/).
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, warning = F, message = F)
@@ -204,19 +203,19 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 
 # Rater summary
 
-|                          | rater A            | rater B            |
-| ------------------------ |:------------------:| ------------------:|
+|                          |      rater A       |            rater B |
+|--------------------------|:------------------:|-------------------:|
 | n uploaded               | `r nrow(first_df)` | `r nrow(secon_df)` |
-| n reviewed               | `r first_total`    | `r secon_total`    |
-| % reviewed               | `r first_prev`     | `r secon_prev`     |
-| n flagged relevant       | `r first_rele`     | `r secon_rele`     |
-| n flagged irrelevant     | `r first_irre`     | `r secon_irre`     |
-| % flagged relevant       | `r first_pfrel`    | `r secon_pfrel`    |
-| n unreviewed             | `r first_unrev`    | `r secon_unrev`    |
-| n total irrelevant       | `r first_trele`    | `r secon_trele`    |
-| % total relevant         | `r first_ptrel`    | `r secon_ptrel`    |
-| n relevant v. irrelevant | `r first_dis`      | `r secon_dis`      | 
-| n relevant v. unreviewed | `r missed1`        | `r missed2`        | 
+| n reviewed               |  `r first_total`   |    `r secon_total` |
+| \% reviewed              |   `r first_prev`   |     `r secon_prev` |
+| n flagged relevant       |   `r first_rele`   |     `r secon_rele` |
+| n flagged irrelevant     |   `r first_irre`   |     `r secon_irre` |
+| \% flagged relevant      |  `r first_pfrel`   |    `r secon_pfrel` |
+| n unreviewed             |  `r first_unrev`   |    `r secon_unrev` |
+| n total irrelevant       |  `r first_trele`   |    `r secon_trele` |
+| \% total relevant        |  `r first_ptrel`   |    `r secon_ptrel` |
+| n relevant v. irrelevant |   `r first_dis`    |      `r secon_dis` |
+| n relevant v. unreviewed |    `r missed1`     |        `r missed2` |
 
 # Overall summary
 
@@ -267,15 +266,15 @@ table2_summary_complete_df <- table2_summary_df %>%
 kable(table2_summary_complete_df)
 ```
 
-# Written explanations 
+# Written explanations
 
-- Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles (`r first_prev`%), of which (s)he flagged `r first_rele` as relevant and `r first_irre` as irrelevant.
-- Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles (`r secon_prev`%), of which (s)he flagged `r secon_rele` as relevant and `r secon_irre` as irrelevant.
-- Rater A left a total of `r first_unrev` articles unreviewed, while rater B left `r secon_unrev` unreviewed. In other words, these articles lay beyond the 'stop rule' and were never seen by the raters.
-- Rater A flagged `r missed1` article(s) as relevant that rater B left unreviewed. This figure for Rater B was `r missed2`. 
-- The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
-- Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
-- Here, the number of decisions eligible for the Kappa statistic is defined as the _both raters made decision_ figure. This is the sum of _both rated irrelevant_, _one rated relevant, other irrelevant_  and _both rated relevant_. By default, then, the Kappa reported here does not include abstracts for which _one rated relevant, other left unreviewed_. 
+-   Reviewer A evaluated `r first_total` of `r nrow(first_df)` articles (`r first_prev`%), of which (s)he flagged `r first_rele` as relevant and `r first_irre` as irrelevant.
+-   Reviewer B evaluated `r secon_total` of `r nrow(secon_df)` articles (`r secon_prev`%), of which (s)he flagged `r secon_rele` as relevant and `r secon_irre` as irrelevant.
+-   Rater A left a total of `r first_unrev` articles unreviewed, while rater B left `r secon_unrev` unreviewed. In other words, these articles lay beyond the 'stop rule' and were never seen by the raters.
+-   Rater A flagged `r missed1` article(s) as relevant that rater B left unreviewed. This figure for Rater B was `r missed2`.
+-   The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
+-   Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
+-   Here, the number of decisions eligible for the Kappa statistic is defined as the *both raters made decision* figure. This is the sum of *both rated irrelevant*, *one rated relevant, other irrelevant* and *both rated relevant*. By default, then, the Kappa reported here does not include abstracts for which *one rated relevant, other left unreviewed*.
 
 # Visual summary
 
@@ -310,7 +309,7 @@ first_secon_review_df %>%
   coord_fixed(ratio = 1)
 ```
 
-</center> 
+</center>
 
 ## Rater overlap
 
@@ -383,7 +382,7 @@ if (missed1 == 0 & missed2 == 0) {
 
 ## Rater A
 
-Studies for which  rater A flagged relevant and rater B flagged irrelevant.
+Studies for which rater A flagged relevant and rater B flagged irrelevant.
 
 ```{r}
 # Here, note that ASReview updated their default column names late-2021. 
@@ -401,7 +400,7 @@ disagree1_df %>%
 
 ## Rater B
 
-Studies for which  rater B flagged relevant and rater A flagged irrelevant.
+Studies for which rater B flagged relevant and rater A flagged irrelevant.
 
 ```{r}
 # Here, note that ASReview updated their default column names late-2021. 
@@ -413,4 +412,3 @@ disagree2_df %>%
   # scroll_box(width = "120%", height = "300px") %>%
   kable_styling()
 ```
-
