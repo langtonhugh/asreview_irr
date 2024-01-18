@@ -28,8 +28,11 @@ library(waffle)
 
 ```{r start}
 # Load data.
-first_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
-secon_df <- read_csv("data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
+file_1 <- file.choose()
+file_2 <- file.choose()
+
+first_df <- read_csv(file_1)
+secon_df <- read_csv(file_2)
 
 # Total reviewed.
 first_total <- table(first_df$included)[["1"]] + table(first_df$included)[["0"]]

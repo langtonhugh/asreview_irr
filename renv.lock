@@ -638,9 +638,14 @@
     },
     "kableExtra": {
       "Package": "kableExtra",
-      "Version": "1.3.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
+      "Version": "1.3.4.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "kableExtra",
+      "RemoteUsername": "kupietz",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "3bf9b21a769c9e6c21c955689bf5f8175dc83350",
       "Requirements": [
         "R",
         "digest",
@@ -662,7 +667,7 @@
         "webshot",
         "xml2"
       ],
-      "Hash": "49b625e6aabe4c5f091f5850aba8ff78"
+      "Hash": "64a6ab8b8aaf1dd6a6b96494ff2b1fe7"
     },
     "knitr": {
       "Package": "knitr",
