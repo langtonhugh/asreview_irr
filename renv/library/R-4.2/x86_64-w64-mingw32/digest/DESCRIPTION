@@ -31,6 +31,6 @@ Packaged: 2024-01-11 01:14:07 UTC; edd
 Repository: RSPM
 Date/Publication: 2024-01-11 13:40:02 UTC
 Encoding: UTF-8
-Built: R 4.2.0; x86_64-w64-mingw32; 2024-01-19 11:43:38 UTC; windows
+Built: R 4.2.0; x86_64-w64-mingw32; 2024-01-23 03:39:58 UTC; windows
 ExperimentalWindowsRuntime: ucrt
 Archs: x64

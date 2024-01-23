@@ -44,6 +44,6 @@ Author: Joe Cheng [aut],
 Maintainer: Carson Sievert <carson@posit.co>
 Repository: RSPM
 Date/Publication: 2023-11-03 17:00:07 UTC
-Built: R 4.2.0; x86_64-w64-mingw32; 2023-11-06 12:25:48 UTC; windows
+Built: R 4.2.0; x86_64-w64-mingw32; 2024-01-23 05:09:53 UTC; windows
 ExperimentalWindowsRuntime: ucrt
 Archs: x64

@@ -28,8 +28,8 @@ library(waffle)
 
 ```{r start}
 # Load data.
-file_1 <- file.choose()
-file_2 <- file.choose()
+file_1 <- choose.files(caption = "Select the .csv file for Rater A")
+file_2 <- choose.files(caption = "Select the .csv file for Rater B")
 
 first_df <- read_csv(file_1)
 secon_df <- read_csv(file_2)
