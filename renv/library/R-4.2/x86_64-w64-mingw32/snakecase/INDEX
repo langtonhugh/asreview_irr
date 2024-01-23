@@ -1,0 +1,21 @@
+abbreviation_internal   Internal abbreviation marker, marks
+                        abbreviations with an underscore behind. Useful
+                        if 'parsing_option' 1 is needed, but some
+                        abbreviations need 'parsing_option' 2.
+caseconverter           Specific case converter shortcuts
+check_design_rule       Internal helper to test the design rules for
+                        any string and setting of 'to_any_case()'
+parsing_helpers         Parsing helpers
+preprocess_internal     Internal function that replaces regex matches
+                        with underscores
+relevant                Internal helper for "lower_upper",
+                        "upper_lower". This helper returns a logical
+                        vector with TRUE for the first and every second
+                        string of those which contain an alphabetic
+                        character
+replace_special_characters_internal
+                        Internal helper to replace special characters.
+to_any_case             General case conversion
+to_parsed_case_internal
+                        Internal parser, which is relevant for
+                        preprocessing, parsing and parsing options

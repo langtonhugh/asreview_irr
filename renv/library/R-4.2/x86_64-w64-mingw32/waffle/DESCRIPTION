@@ -1,0 +1,42 @@
+Package: waffle
+Type: Package
+Title: Create Waffle Chart Visualizations
+Version: 1.0.2
+Date: 2023-09-30
+Authors@R: c(
+    person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 
+           comment = c(ORCID = "0000-0001-5670-2640")),
+    person("Dave", "Gandy", role = "aut", comment = "Font Awesome"),
+    person("Andrew", "Breza", email = "andrew.breza@gmail.com", role = "ctb"),
+    person("Matthias", "Jütte", role = "ctb"),
+    person("Paul", "Campbell", email = "pacampbell91@gmail.com", 
+           role = "ctb", comment = "geom_bar flip")
+    )
+Maintainer: Bob Rudis <bob@rud.is>
+Description: Square pie charts (a.k.a. waffle charts) can be used
+    to communicate parts of a whole for categorical quantities. To emulate the
+    percentage view of a pie chart, a 10x10 grid should be used with each square
+    representing 1% of the total. Modern uses of waffle charts do not
+    necessarily adhere to this rule and can be created with a grid of any
+    rectangular shape. Best practices suggest keeping the number of categories
+    small, just as should be done when creating pie charts. Tools are provided
+    to create waffle charts as well as stitch them together, and to use glyphs
+    for making isotype pictograms.
+Encoding: UTF-8
+Copyright: file inst/COPYRIGHTS
+Suggests: knitr, rmarkdown, dplyr, ggthemes
+Depends: R (>= 3.5.0), ggplot2 (>= 3.1.0)
+License: GPL (>= 2)
+Imports: RColorBrewer, grid, gridExtra, gtable, extrafont, curl,
+        stringr, stats, htmlwidgets, DT, plyr, rlang, utils
+RoxygenNote: 7.2.3
+NeedsCompilation: no
+Packaged: 2023-09-30 20:08:27 UTC; hrbrmstr
+Author: Bob Rudis [aut, cre] (<https://orcid.org/0000-0001-5670-2640>),
+  Dave Gandy [aut] (Font Awesome),
+  Andrew Breza [ctb],
+  Matthias Jütte [ctb],
+  Paul Campbell [ctb] (geom_bar flip)
+Repository: RSPM
+Date/Publication: 2023-09-30 20:30:02 UTC
+Built: R 4.2.0; ; 2023-10-02 12:16:14 UTC; windows

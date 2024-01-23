@@ -1,0 +1,15 @@
+fa5_brand               Font Awesome 5 Brand
+fa5_solid               Font Awesome 5 Solid
+fa_grep                 Search Font Awesome glyph names for a pattern
+fa_list                 List all Font Awesome glyphs
+geom_pictogram          Pictogram Geom
+geom_waffle             Waffle (Square pie chart) Geom
+install_fa_fonts        Install Font Awesome 5 Fonts
+iron                    Veritical, left-aligned layout for waffle plots
+scale_label_pictogram   Used with geom_pictogram() to map Font Awesome
+                        fonts to labels
+theme_enhance_waffle    Waffle chart theme cruft remover that can be
+                        used with any other theme
+waffle                  Make waffle (square pie) charts
+waffle-package          A package to make waffle charts (square pie
+                        charts) in R.

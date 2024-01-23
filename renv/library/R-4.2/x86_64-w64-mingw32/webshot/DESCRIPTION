@@ -1,0 +1,34 @@
+Package: webshot
+Title: Take Screenshots of Web Pages
+Version: 0.5.5
+Authors@R: c(
+    person("Winston", "Chang", email = "winston@rstudio.com", role = c("aut", "cre")),
+    person("Yihui", "Xie", role = "ctb"),
+    person("Francois", "Guillem", role = "ctb"),
+    person("Barret", "Schloerke", role = "ctb"),
+    person("Nicolas", "Perriault", role = "ctb", comment = "The CasperJS library")
+    )
+Description: Takes screenshots of web pages, including Shiny applications and R
+    Markdown documents.
+Depends: R (>= 3.0)
+Imports: magrittr, jsonlite, callr
+Suggests: httpuv, knitr, rmarkdown, shiny, testthat (>= 3.0.0)
+License: GPL-2
+SystemRequirements: PhantomJS for taking screenshots, ImageMagick or
+        GraphicsMagick and OptiPNG for manipulating images.
+RoxygenNote: 7.2.3
+Encoding: UTF-8
+URL: https://wch.github.io/webshot/, https://github.com/wch/webshot/
+BugReports: https://github.com/wch/webshot/issues
+Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2023-06-26 22:07:00 UTC; winston
+Author: Winston Chang [aut, cre],
+  Yihui Xie [ctb],
+  Francois Guillem [ctb],
+  Barret Schloerke [ctb],
+  Nicolas Perriault [ctb] (The CasperJS library)
+Maintainer: Winston Chang <winston@rstudio.com>
+Repository: RSPM
+Date/Publication: 2023-06-26 23:30:02 UTC
+Built: R 4.2.0; ; 2024-01-23 05:10:05 UTC; windows
