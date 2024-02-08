@@ -26,18 +26,60 @@ library(kableExtra)
 library(waffle)
 ```
 
-```{r start}
+```{r start, error=TRUE}
 # Load data.
 file_1 <- file.choose()
+
+tryCatch(
+{
+  first_df <- read_csv(file_1)
+},
+error = function(e) {
+  warning("Unable to read the csv. Check if your file is a valid csv.")
+  stop(e)
+}) 
+
+if(nrow(first_df == 0)) {
+  stop("CSV is empty. Check if your file is a valid csv.")
+}
+
 file_2 <- file.choose()
 
-first_df <- read_csv(file_1)
-secon_df <- read_csv(file_2)
+tryCatch(
+{
+  secon_df <- read_csv(file_2)
+},
+error = function(e) {
+  warning("Unable to read the second csv. Check if your file is a valid csv.")
+  stop(e)
+})
 
-# Total reviewed.
-first_total <- table(first_df$included)[["1"]] + table(first_df$included)[["0"]]
-secon_total <- table(secon_df$included)[["1"]] + table(secon_df$included)[["0"]]
+if(nrow(secon_df == 0)) {
+  stop("CSV is empty. Check if your file is a valid csv.")
+}
 
+```
+
+
+
+```{r validate}
+if(nrow(first_df) != nrow(secon_df)) {
+  stop("Size of the compared dataframes does not match. Check for issues in the loaded files or ")
+}
+
+
+if ('record_id' %in% names(first_df) & 'record_id' %in% names(secon_df)) {
+  first_record_id <- first_df$record_id
+  secon_record_id <- secon_df$record_id
+} else {
+   stop("Cannot find a column named 'record_id'. If you have a column that contains the ID of a record, rename ")
+}
+
+
+
+```
+
+```{r calc}
 # Relevant flags.
 first_rele <- table(first_df$included)[["1"]]
 first_irre <- table(first_df$included)[["0"]]
@@ -45,6 +87,10 @@ first_irre <- table(first_df$included)[["0"]]
 # Irrelevant flags.
 secon_rele <- table(secon_df$included)[["1"]]
 secon_irre <- table(secon_df$included)[["0"]]
+
+# Total reviewed.
+first_total <- first_rele + first_irre
+secon_total <- secon_rele + secon_irre
 
 # Not reviewed
 first_unrev <- sum(is.na(first_df$included))
