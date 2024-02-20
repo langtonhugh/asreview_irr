@@ -6,7 +6,7 @@ The .Rmd file will automatically produce a summary report (.html) on the level o
 
 Step 1: Download and save the .csv outputs from ASReview into the 'data' folder.  
 Step 2: Open up the asreview_irr.Rproj in RStdudio.  
-Step 3: Open report_example.Rmd.
+Step 3: Open report_example.Rmd.  
 Step 4: Knit the report and when prompted pick the files that you want to use.  
 
 Look out for comments in the code! Depending on what version of ASReview you have used, you might need to comment in/out code due to, for example, column name changes.
