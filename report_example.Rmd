@@ -20,26 +20,39 @@ knitr::opts_chunk$set(echo = F, warning = F, message = F)
 library(readr)
 library(dplyr)
 library(stringr)
+library(rlang)
 library(purrr)
 library(irr)
+library(tools)
+library(glue)
+library(readxl)
+library(utils)
 library(kableExtra)
+library(tcltk)
 library(waffle)
 ```
 
 ```{r start, error=TRUE}
 # Load data.
 file_1 <- file.choose()
+file_type <- file_ext(file_1)
 
 tryCatch(
 {
-  first_df <- read_csv(file_1)
+  if (file_type == "xlsx") {
+    first_df <- read_excel(file_1)
+  } else if (file_type == "csv") {
+    first_df <- read_csv(file_1)
+  } else {
+    warning("File type not supported, try an Excel or a csv file")
+  }
 },
 error = function(e) {
-  warning("Unable to read the csv. Check if your file is a valid csv.")
+  warning("Unable to read the file Check if your file is valid")
   stop(e)
 }) 
 
-if(nrow(first_df == 0)) {
+if(nrow(first_df) == 0) {
   stop("CSV is empty. Check if your file is a valid csv.")
 }
 
@@ -47,14 +60,20 @@ file_2 <- file.choose()
 
 tryCatch(
 {
-  secon_df <- read_csv(file_2)
+  if (file_type == "xlsx") {
+    secon_df <- read_excel(file_2)
+  } else if (file_type == "csv") {
+    secon_df <- read_csv(file_2)
+  } else {
+    warning("File type not supported, try an Excel or a CSV file")
+  }
 },
 error = function(e) {
   warning("Unable to read the second csv. Check if your file is a valid csv.")
   stop(e)
 })
 
-if(nrow(secon_df == 0)) {
+if(nrow(secon_df) == 0) {
   stop("CSV is empty. Check if your file is a valid csv.")
 }
 
@@ -64,37 +83,57 @@ if(nrow(secon_df == 0)) {
 
 ```{r validate}
 if(nrow(first_df) != nrow(secon_df)) {
-  stop("Size of the compared dataframes does not match. Check for issues in the loaded files or ")
+  stop("Size of the compared dataframes does not match. Check for issues in the loaded files (e.g., duplicate rows).")
 }
 
-
-if ('record_id' %in% names(first_df) & 'record_id' %in% names(secon_df)) {
-  first_record_id <- first_df$record_id
-  secon_record_id <- secon_df$record_id
-} else {
-   stop("Cannot find a column named 'record_id'. If you have a column that contains the ID of a record, rename ")
+validate_name <- function(potential_names, name, df) {
+  for (string in potential_names) {
+    if (string %in% names(df)) {
+      return(string)
+    }
+  }
+  return(tk_select.list(names(df), title = glue("Please select the variable that contains the {name} for {deparse(substitute(df))}")))
 }
 
+id_name_1 <- validate_name('record_id', 'record id', first_df)
+id_name_2 <- validate_name('record_id', 'record id', secon_df)
 
+relevance_1 <- validate_name('included', 'ASReview relevance rating', first_df)
+relevance_2 <- validate_name('included', 'ASReview relevance rating', secon_df)
+
+first_relevance <- first_df[[relevance_1]]
+secon_relevance <- secon_df[[relevance_2]]
+
+authors_1 <- validate_name(c('first_authors', 'authors'), 'author names', first_df)
+authors_2 <- validate_name(c('first_authors', 'authors'), 'author names', secon_df)
+
+year_1 <- validate_name(c('publication_year', 'year'), 'publication year', first_df)
+year_2 <- validate_name(c('publication_year', 'year'), 'publication year', secon_df)
+
+title_1 <- validate_name(c('primary_title', 'title'), 'title', first_df)
+title_2 <- validate_name(c('primary_title', 'title'), 'title', secon_df)
+
+abstract_1 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', first_df)
+abstract_2 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', secon_df)
 
 ```
 
 ```{r calc}
 # Relevant flags.
-first_rele <- table(first_df$included)[["1"]]
-first_irre <- table(first_df$included)[["0"]]
+first_rele <- table(first_relevance)[["1"]]
+first_irre <- table(first_relevance)[["0"]]
 
 # Irrelevant flags.
-secon_rele <- table(secon_df$included)[["1"]]
-secon_irre <- table(secon_df$included)[["0"]]
+secon_rele <- table(secon_relevance)[["1"]]
+secon_irre <- table(secon_relevance)[["0"]]
 
 # Total reviewed.
 first_total <- first_rele + first_irre
 secon_total <- secon_rele + secon_irre
 
 # Not reviewed
-first_unrev <- sum(is.na(first_df$included))
-secon_unrev <- sum(is.na(secon_df$included))
+first_unrev <- sum(is.na(first_relevance))
+secon_unrev <- sum(is.na(secon_relevance))
 
 # % reviewed.
 first_prev <- round(100*first_total/nrow(first_df), 2)
@@ -114,39 +153,37 @@ secon_pfrel <- round(100*secon_rele/secon_total, 2)
 
 # Disagreements 1: first coder says relevant, second coder says irrelevant.
 first_relevant_vec <- first_df %>%
-  filter(included == 1) %>%
-  pluck("record_id")
+  filter(.data[[relevance_1]] == 1) %>%
+  pluck(paste(id_name_1))
 
 disagree1_df <- secon_df %>%
-  filter(included == 0, record_id %in% first_relevant_vec) %>%
-  # select(record_id, authors, year, title, abstract) # For newer projects.
-  select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
+  filter(.data[[relevance_2]] == 0, .data[[id_name_2]] %in% first_relevant_vec) %>%
+  select(paste(id_name_2), paste(authors_2), paste(year_2), paste(title_2), paste(abstract_2)) # For older projects.
 
 # Define how many disagreements for table.
 first_dis <- nrow(disagree1_df) # 39
 
 # Disagreement 2: second coder says relevant, first coder says irrelevant, 
 secon_relevant_vec <- secon_df %>% 
-  filter(included == 1) %>% 
-  pluck("record_id")
+  filter(.data[[relevance_2]] == 1) %>% 
+  pluck(paste(id_name_2))
 
 # Subset first rater's irrelevant list with those second rater said relevant.
 disagree2_df <- first_df %>% 
-  filter(included == 0, record_id %in% secon_relevant_vec) %>% 
-  # select(record_id, authors, year, title, abstract) # For newer projects.
-  select(record_id, first_authors, publication_year, primary_title, notes_abstract) # For older projects.
+  filter(.data[[relevance_1]] == 0, .data[[id_name_1]] %in% secon_relevant_vec) %>% 
+  select(paste(id_name_1), paste(authors_1), paste(year_1), paste(title_1), paste(abstract_1)) # For older projects.
 
 # Define how many disagreements for table.
 secon_dis <- nrow(disagree2_df) # 5
 
 # Sort and create vectors for Kappa.
 first_vec <- first_df %>% 
-  arrange(record_id) %>% 
-  pluck("included")
+  arrange(paste(id_name_1)) %>% 
+  pluck(paste(relevance_1))
 
 secon_vec <- secon_df %>% 
-  arrange(record_id) %>% 
-  pluck("included")
+  arrange(paste(id_name_2)) %>% 
+  pluck(paste(relevance_2))
 
 # Create array for Kappa. Note this still contains missings for those that 
 # one or both raters did not review. These are automatically removed in the stat.
@@ -157,25 +194,20 @@ full_array <- cbind(first_vec, secon_vec)
 
 # Identify left unreviewed by rater 1.
 first_dist_vec <- first_df %>% 
-  filter(is.na(included)) %>%
-  pluck("record_id")
+  filter(is.na(.data[[relevance_1]])) %>%
+  pluck(paste(id_name_1))
 
 # Check. This should be TRUE.
 # length(first_dist_vec) == first_unrev
 
 # Identify left unreviewed by rater 2.
 secon_dist_vec <- secon_df %>% 
-  filter(is.na(included)) %>%
-  pluck("record_id")
+  filter(is.na(.data[[relevance_2]])) %>%
+  pluck(paste(id_name_2))
 
-# Check. This should be TRUE.
-# length(secon_dist_vec) == secon_unrev
-
-# Create flag for those identified as relevant by first rater, but not reviewed
-# by second.
 first_dist_df <- first_df %>% 
-  filter(included == 1) %>% 
-  mutate(missed_flag = if_else(record_id %in% secon_dist_vec,
+  filter(.data[[relevance_1]] == 1) %>% 
+  mutate(missed_flag = if_else(paste(id_name_1) %in% secon_dist_vec,
                                "missed",
                                "not missed"),
          missed_flag = as.factor(missed_flag))
@@ -190,8 +222,8 @@ first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
 # Create flag for those identified as relevant by second rater, but not reviewed
 # by second.
 secon_dist_df <- secon_df %>% 
-  filter(included == 1) %>% 
-  mutate(missed_flag = if_else(record_id %in% first_dist_vec,
+  filter(.data[[relevance_2]] == 1) %>% 
+  mutate(missed_flag = if_else(.data[[id_name_2]] %in% first_dist_vec,
                           "missed",
                           "not missed"),
          missed_flag = as.factor(missed_flag))
@@ -279,14 +311,25 @@ secon_df <- secon_df %>%
 first_df <- first_df %>% 
   mutate(rater_id = 1)
 
+colnames(secon_df)[colnames(secon_df) == paste(id_name_2)] <- id_name_1
+colnames(secon_df)[colnames(secon_df) == paste(relevance_2)] <- relevance_1
+colnames(secon_df)[colnames(secon_df) == paste(authors_2)] <- authors_1
+colnames(secon_df)[colnames(secon_df) == paste(title_2)] <- title_1
+colnames(secon_df)[colnames(secon_df) == paste(abstract_2)] <- abstract_1
+colnames(secon_df)[colnames(secon_df) == paste(year_2)] <- year_1
+
+first_df[[paste(relevance_1)]] <- as.numeric(first_df[[paste(relevance_1)]])
+secon_df[[paste(relevance_1)]] <- as.numeric(secon_df[[paste(relevance_1)]])
+
+
 # Bind together.
 first_secon_review_df <- bind_rows(first_df, secon_df) %>% 
-  mutate(included_new = if_else(is.na(included), 1000, included))
+  mutate(included_new := if_else(is.na(!!sym(relevance_1)), 1000, !!sym(relevance_1)))
 
 # Create summary table.
 compare_df <- first_secon_review_df %>% 
   # group_by(record_id, title) %>%       # add if needed. 
-  group_by(record_id, first_authors, publication_year, primary_title, notes_abstract) %>% # comment out if needed.
+  group_by(!!sym(id_name_1), !!sym(authors_1), !!sym(year_1), !!sym(title_1), !!sym(abstract_1)) %>% # comment out if needed.
   summarise(agreement_number = sum(included_new)) %>% 
   ungroup()
 
@@ -308,6 +351,8 @@ both_raters_df <- table2_summary_df %>%
   # group_by(Description) %>% 
   summarize(Description = "Both raters made decision",
             n = sum(n))
+
+
 
 table2_summary_complete_df <- table2_summary_df %>% 
   bind_rows(both_raters_df)
@@ -365,15 +410,17 @@ first_secon_review_df %>%
 <center>
 
 ```{r, overlap}
-count(compare_df, agreement_number) %>%
+
+
+ count(compare_df, agreement_number) %>%
   mutate(stat = ifelse(agreement_number == 0   , "Both rated irrelevant"                      , NA),
          stat = ifelse(agreement_number == 1   , "One rated relevant, other irrelevant"       , stat),
          stat = ifelse(agreement_number == 2   , "Both rated relevant"                        , stat),
          stat = ifelse(agreement_number == 1000, "One rated irrelevant, other left unreviewed", stat),
          stat = ifelse(agreement_number == 1001, "One rated relevant, other left unreviewed"  , stat),
-         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>% 
-  select(stat, n) %>% 
-  rename(Description = stat) %>% 
+         stat = ifelse(agreement_number == 2000, "Both left unreviewed"                       , stat)) %>%
+  select(stat, n) %>%
+  rename(Description = stat) %>%
   ggplot(data = .) +
   geom_waffle(mapping = aes(fill = Description, values = n),
               make_proportional = FALSE,
@@ -422,7 +469,6 @@ if (missed1 == 0 & missed2 == 0) {
   compare_df %>% 
     filter(agreement_number == 1001) %>%
     select(-agreement_number) %>% 
-    mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
     kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   kable_styling()
   
@@ -437,10 +483,9 @@ Studies for which rater A flagged relevant and rater B flagged irrelevant.
 # Here, note that ASReview updated their default column names late-2021. 
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 disagree1_df %>% 
-  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
-  # scroll_box(width = "120%", height = "300px") %>% 
   kable_styling()
+  # scroll_box(width = "120%", height = "300px") %>% 
 ```
 
 <br>
@@ -456,7 +501,6 @@ Studies for which rater B flagged relevant and rater A flagged irrelevant.
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 
 disagree2_df %>% 
-  mutate(publication_year = str_remove_all(publication_year, "///")) %>% # Only needed for older projects.
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>%
   kable_styling()

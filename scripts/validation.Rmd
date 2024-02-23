@@ -1,0 +1,34 @@
+---
+
+---
+
+```{r}
+library(validate)
+library(readr)
+```
+
+```{r}
+first_coder <- read_csv("../data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv")
+
+second_coder <- read_csv("../data/asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv")
+```
+
+```{r}
+
+```
+
+```{r}
+rules <- validator(
+  is.numeric(record_id)
+)
+
+confront(first_coder, rules)
+```
+
+```{r}
+all(sort(first_coder$record_id) == sort(second_coder$record_id))
+
+
+```
+
+)
