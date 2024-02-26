@@ -6,7 +6,7 @@ n flagged relevant,115,82
 n flagged irrelevant,374,453
 % flagged relevant,23.52,15.33
 n unreviewed,2614,2568
-n total irrelevant,2988,3021
-% total relevant,3.71,2.64
+n irrelevant + unreviewed,2988,3021
+% irrelevant + unreviewed,3.71,2.64
 n relevant v. irrelevant,39,5
 n relevant v. unreviewed,0,1

@@ -23,6 +23,7 @@ library(stringr)
 library(rlang)
 library(purrr)
 library(irr)
+library(irrCAC)
 library(tools)
 library(glue)
 library(readxl)
@@ -250,8 +251,8 @@ irr_df <- tibble(
                 "n flagged irrelevant",
                 "% flagged relevant",
                 "n unreviewed",
-                "n total irrelevant",
-                "% total relevant",
+                "n irrelevant + unreviewed",
+                "% irrelevant + unreviewed",
                 "n relevant v. irrelevant",
                 "n relevant v. unreviewed"),
   `rater A` = c(nrow(first_df),
@@ -284,19 +285,19 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 
 # Rater summary
 
-|                          |      rater A       |            rater B |
-|--------------------------|:------------------:|-------------------:|
-| n uploaded               | `r nrow(first_df)` | `r nrow(secon_df)` |
-| n reviewed               |  `r first_total`   |    `r secon_total` |
-| \% reviewed              |   `r first_prev`   |     `r secon_prev` |
-| n flagged relevant       |   `r first_rele`   |     `r secon_rele` |
-| n flagged irrelevant     |   `r first_irre`   |     `r secon_irre` |
-| \% flagged relevant      |  `r first_pfrel`   |    `r secon_pfrel` |
-| n unreviewed             |  `r first_unrev`   |    `r secon_unrev` |
-| n total irrelevant       |  `r first_trele`   |    `r secon_trele` |
-| \% total relevant        |  `r first_ptrel`   |    `r secon_ptrel` |
-| n relevant v. irrelevant |   `r first_dis`    |      `r secon_dis` |
-| n relevant v. unreviewed |    `r missed1`     |        `r missed2` |
+|                            |      rater A       |       rater B      |
+|----------------------------|:------------------:|-------------------:|
+| n uploaded                 | `r nrow(first_df)` | `r nrow(secon_df)` |
+| n reviewed                 |  `r first_total`   |  `r secon_total`   |
+| \% reviewed                |   `r first_prev`   |   `r secon_prev`   |
+| n flagged relevant         |   `r first_rele`   |   `r secon_rele`   |
+| n flagged irrelevant       |   `r first_irre`   |   `r secon_irre`   |
+| \% flagged relevant        |   `r first_pfrel`  |  `r secon_pfrel`   |
+| n unreviewed               |  `r first_unrev`   |  `r secon_unrev`   |
+| n unreviewed +  irrelevant |  `r first_trele`   |  `r secon_trele`   |
+| \% total relevant          |  `r first_ptrel`   |  `r secon_ptrel`   |
+| n relevant v. irrelevant   |   `r first_dis`    |   `r secon_dis`    |
+| n relevant v. unreviewed   |    `r missed1`     |    `r missed2`     |
 
 # Overall summary
 
@@ -455,7 +456,11 @@ The Kappa statistic is the following:
 ```{r}
 kappa2(full_array)
 ```
+Gwent's kappa is the following:
+```{r}
+ pa.coeff.raw(full_array)
 
+```
 # Disagreements
 
 ## Relevant versus unreviewed
