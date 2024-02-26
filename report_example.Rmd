@@ -36,13 +36,13 @@ library(waffle)
 ```{r start, error=TRUE}
 # Load data.
 file_1 <- file.choose()
-file_type <- file_ext(file_1)
+file_type1 <- file_ext(file_1)
 
 tryCatch(
 {
-  if (file_type == "xlsx") {
+  if (file_type1 == "xlsx") {
     first_df <- read_excel(file_1)
-  } else if (file_type == "csv") {
+  } else if (file_type1 == "csv") {
     first_df <- read_csv(file_1)
   } else {
     warning("File type not supported, try an Excel or a csv file")
@@ -58,12 +58,13 @@ if(nrow(first_df) == 0) {
 }
 
 file_2 <- file.choose()
+file_type2 <- file_ext(file_2)
 
 tryCatch(
 {
-  if (file_type == "xlsx") {
+  if (file_type2 == "xlsx") {
     secon_df <- read_excel(file_2)
-  } else if (file_type == "csv") {
+  } else if (file_type2 == "csv") {
     secon_df <- read_csv(file_2)
   } else {
     warning("File type not supported, try an Excel or a CSV file")
