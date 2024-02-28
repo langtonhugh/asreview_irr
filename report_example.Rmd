@@ -118,7 +118,9 @@ abstract_1 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', first_d
 abstract_2 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', secon_df)
 
 ```
-
+# File names
+File 1: `r file_1`
+File 2: `r file_2`
 ```{r calc}
 # Relevant flags.
 first_rele <- table(first_relevance)[["1"]]
@@ -459,7 +461,6 @@ kappa2(full_array)
 Gwent's kappa is the following:
 ```{r}
  pa.coeff.raw(full_array)
-
 ```
 # Disagreements
 
