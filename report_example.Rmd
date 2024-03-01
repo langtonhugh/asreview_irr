@@ -33,7 +33,7 @@ library(tcltk)
 library(waffle)
 ```
 
-```{r start, error=TRUE}
+```{r start, error=TRUE, message=FALSE}
 # Load data.
 file_1 <- file.choose()
 file_type <- file_ext(file_1)
@@ -78,6 +78,7 @@ if(nrow(secon_df) == 0) {
   stop("CSV is empty. Check if your file is a valid csv.")
 }
 
+
 ```
 
 
@@ -116,6 +117,10 @@ title_2 <- validate_name(c('primary_title', 'title'), 'title', secon_df)
 
 abstract_1 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', first_df)
 abstract_2 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', secon_df)
+
+# Remove rows with duplicated ID's 
+first_df <- first_df[!duplicated(first_df[[id_name_1]]), ]
+secon_df <- secon_df[!duplicated(secon_df[[id_name_2]]), ]
 
 ```
 # File names
