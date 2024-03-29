@@ -125,6 +125,7 @@ secon_df <- secon_df[!duplicated(secon_df[[id_name_2]]), ]
 ```
 # File names
 File 1: `r file_1`
+
 File 2: `r file_2`
 ```{r calc}
 # Relevant flags.
@@ -186,11 +187,11 @@ secon_dis <- nrow(disagree2_df) # 5
 
 # Sort and create vectors for Kappa.
 first_vec <- first_df %>% 
-  arrange(paste(id_name_1)) %>% 
+  arrange(!!sym(id_name_1)) %>% 
   pluck(paste(relevance_1))
 
 secon_vec <- secon_df %>% 
-  arrange(paste(id_name_2)) %>% 
+  arrange(!!sym(id_name_2)) %>% 
   pluck(paste(relevance_2))
 
 # Create array for Kappa. Note this still contains missings for those that 
@@ -450,6 +451,9 @@ first_secon_review_df %>%
 
 </center>
 
+# Comparison of different Kappa methods
+
+
 # Kappa
 
 The level of agreement between rater A and rater B is the following:
@@ -466,6 +470,10 @@ kappa2(full_array)
 Gwent's kappa is the following:
 ```{r}
  pa.coeff.raw(full_array)
+```
+Krippendorf's alpha is the following:
+```{r}
+kripp.alpha(t(full_array))
 ```
 # Disagreements
 
