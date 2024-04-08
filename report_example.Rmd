@@ -33,7 +33,7 @@ library(tcltk)
 library(waffle)
 ```
 
-```{r start, error=TRUE}
+```{r start, error=TRUE, message=FALSE}
 # Load data.
 file_1 <- file.choose()
 file_type1 <- file_ext(file_1)
@@ -79,6 +79,7 @@ if(nrow(secon_df) == 0) {
   stop("CSV is empty. Check if your file is a valid csv.")
 }
 
+
 ```
 
 
@@ -118,9 +119,14 @@ title_2 <- validate_name(c('primary_title', 'title'), 'title', secon_df)
 abstract_1 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', first_df)
 abstract_2 <- validate_name(c('notes_abstract', 'abstract'), 'abstract', secon_df)
 
+# Remove rows with duplicated ID's 
+first_df <- first_df[!duplicated(first_df[[id_name_1]]), ]
+secon_df <- secon_df[!duplicated(secon_df[[id_name_2]]), ]
+
 ```
 # File names
 File 1: `r file_1`
+
 File 2: `r file_2`
 ```{r calc}
 # Relevant flags.
@@ -182,11 +188,11 @@ secon_dis <- nrow(disagree2_df) # 5
 
 # Sort and create vectors for Kappa.
 first_vec <- first_df %>% 
-  arrange(paste(id_name_1)) %>% 
+  arrange(!!sym(id_name_1)) %>% 
   pluck(paste(relevance_1))
 
 secon_vec <- secon_df %>% 
-  arrange(paste(id_name_2)) %>% 
+  arrange(!!sym(id_name_2)) %>% 
   pluck(paste(relevance_2))
 
 # Create array for Kappa. Note this still contains missings for those that 
@@ -446,6 +452,9 @@ first_secon_review_df %>%
 
 </center>
 
+# Comparison of different Kappa methods
+
+
 # Kappa
 
 The level of agreement between rater A and rater B is the following:
@@ -462,6 +471,10 @@ kappa2(full_array)
 Gwent's kappa is the following:
 ```{r}
  pa.coeff.raw(full_array)
+```
+Krippendorf's alpha is the following:
+```{r}
+kripp.alpha(t(full_array))
 ```
 # Disagreements
 
