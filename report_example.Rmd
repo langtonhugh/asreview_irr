@@ -34,9 +34,9 @@ library(tcltk)
 library(waffle)
 ```
 
-```{r start, error=TRUE, message=FALSE}
+```{r choose_your_files!, error=TRUE, message=FALSE}
 # Load data.
-file_1 <- file.choose()
+file_1 <- choose.files(caption = "Select the .csv file for Rater A")
 file_type <- file_ext(file_1)
 
 tryCatch(
@@ -58,7 +58,7 @@ if(nrow(first_df) == 0) {
   stop("CSV is empty. Check if your file is a valid csv.")
 }
 
-file_2 <- file.choose()
+file_2 <- choose.files(caption = "Select the .csv file for Rater B")
 
 tryCatch(
 {
@@ -124,10 +124,21 @@ first_df <- first_df[!duplicated(first_df[[id_name_1]]), ]
 secon_df <- secon_df[!duplicated(secon_df[[id_name_2]]), ]
 
 ```
-# File names
-File 1: `r file_1`
 
-File 2: `r file_2`
+# Files used
+
+File 1 (selected for rater A):
+
+```{r, comment = ""}
+cat(file_1)
+```
+
+File 2 (selected for rater B):
+
+```{r, comment = ""}
+cat(file_2)
+```
+
 ```{r calc}
 # Relevant flags.
 first_rele <- table(first_relevance)[["1"]]
@@ -294,8 +305,9 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 
 # Rater summary
 
+
 |                            |      rater A       |       rater B      |
-|----------------------------|:------------------:|-------------------:|
+|----------------------------|--------------------|--------------------|
 | n uploaded                 | `r nrow(first_df)` | `r nrow(secon_df)` |
 | n reviewed                 |  `r first_total`   |  `r secon_total`   |
 | \% reviewed                |   `r first_prev`   |   `r secon_prev`   |
@@ -307,6 +319,7 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 | \% total relevant          |  `r first_ptrel`   |  `r secon_ptrel`   |
 | n relevant v. irrelevant   |   `r first_dis`    |   `r secon_dis`    |
 | n relevant v. unreviewed   |    `r missed1`     |    `r missed2`     |
+
 
 # Overall summary
 
@@ -457,37 +470,49 @@ first_secon_review_df %>%
 
 # Kappa
 
-The level of agreement between rater A and rater B is the following:
-
 ```{r}
-agree(full_array)
+# Create NAs coded and listwise deletions lists.
 na_as_cat <- replace_na(full_array, -1)
 complete_cases <- full_array[complete.cases(full_array),]
 ```
 
-Regular old kappa (with NA's coded):
+The level of agreement between rater A and rater B is the following:
+
+```{r}
+agree(full_array)
+```
+
+Cohen's kappa statistic (with missings coded as `-1`):
+
 ```{r}
 kappa2(na_as_cat)
 ```
 
-Listwise deletion:
+Cohen's kappa statistic (with listwise deletion):
+
 ```{r}
+
 kappa2(complete_cases)
 ```
 
-Gwent's kappa is the following (NA's as category):
-```{r}
- gwet.ac1.raw(na_as_cat)
+Gwet's coefficient (with missings coded as `-1`)
 
+```{r}
+gwet.ac1.raw(na_as_cat)
 ```
-Gwent's kappa on complete cases:
+
+Gwet's coefficient (with listwise deletion):
+
 ```{r}
 gwet.ac1.raw(complete_cases)
 ```
-Krippendorf's alpha is the following:
+
+Krippendorff's alpha (with listwise deletion):
+
 ```{r}
 kripp.alpha(t(full_array))
 ```
+
 # Disagreements
 
 ## Relevant versus unreviewed

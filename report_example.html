@@ -2543,12 +2543,12 @@ dashboard. The report is a work-in-progress. If you are an R user,
 please take a look at the <a href="https://github.com/langtonhugh/asreview_irr/blob/main/report_example.Rmd">source
 code</a>. Checks, feedback and suggestions for additional features are
 welcome. You can find my contact details on <a href="https://www.samlangton.info/">my website</a>.</p>
-<div id="file-names" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> File names</h1>
-<p>File 1:
-C:_irr_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv</p>
-<p>File 2:
-C:_irr_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv</p>
+<div id="files-used" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Files used</h1>
+<p>File 1 (selected for rater A):</p>
+<pre><code>C:\Users\langt\Documents\GitHub\asreview_irr\data\asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand.csv</code></pre>
+<p>File 2 (selected for rater B):</p>
+<pre><code>C:\Users\langt\Documents\GitHub\asreview_irr\data\asreview_result_spatial-and-temporal-patterning-of-emergency-reactive-police-demand-2nd-coder.csv</code></pre>
 </div>
 <div id="rater-summary" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Rater summary</h1>
@@ -2556,65 +2556,65 @@ C:_irr_result_spatial-and-temporal-patterning-of-emergency-reactive-police-deman
 <thead>
 <tr class="header">
 <th></th>
-<th align="center">rater A</th>
-<th align="right">rater B</th>
+<th>rater A</th>
+<th>rater B</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>n uploaded</td>
-<td align="center">3103</td>
-<td align="right">3103</td>
+<td>3103</td>
+<td>3103</td>
 </tr>
 <tr class="even">
 <td>n reviewed</td>
-<td align="center">489</td>
-<td align="right">535</td>
+<td>489</td>
+<td>535</td>
 </tr>
 <tr class="odd">
 <td>% reviewed</td>
-<td align="center">15.76</td>
-<td align="right">17.24</td>
+<td>15.76</td>
+<td>17.24</td>
 </tr>
 <tr class="even">
 <td>n flagged relevant</td>
-<td align="center">115</td>
-<td align="right">82</td>
+<td>115</td>
+<td>82</td>
 </tr>
 <tr class="odd">
 <td>n flagged irrelevant</td>
-<td align="center">374</td>
-<td align="right">453</td>
+<td>374</td>
+<td>453</td>
 </tr>
 <tr class="even">
 <td>% flagged relevant</td>
-<td align="center">23.52</td>
-<td align="right">15.33</td>
+<td>23.52</td>
+<td>15.33</td>
 </tr>
 <tr class="odd">
 <td>n unreviewed</td>
-<td align="center">2614</td>
-<td align="right">2568</td>
+<td>2614</td>
+<td>2568</td>
 </tr>
 <tr class="even">
 <td>n unreviewed + irrelevant</td>
-<td align="center">2988</td>
-<td align="right">3021</td>
+<td>2988</td>
+<td>3021</td>
 </tr>
 <tr class="odd">
 <td>% total relevant</td>
-<td align="center">3.71</td>
-<td align="right">2.64</td>
+<td>3.71</td>
+<td>2.64</td>
 </tr>
 <tr class="even">
 <td>n relevant v. irrelevant</td>
-<td align="center">39</td>
-<td align="right">5</td>
+<td>39</td>
+<td>5</td>
 </tr>
 <tr class="odd">
 <td>n relevant v. unreviewed</td>
-<td align="center">0</td>
-<td align="right">1</td>
+<td>0</td>
+<td>1</td>
 </tr>
 </tbody>
 </table>
@@ -2749,7 +2749,7 @@ following:</p>
 ##  Subjects = 445 
 ##    Raters = 2 
 ##   %-agree = 90.1</code></pre>
-<p>Regular old kappa (with NA’s coded):</p>
+<p>Cohen’s kappa statistic (with missings coded as <code>-1</code>):</p>
 <pre><code>##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
 ## 
 ##  Subjects = 2969 
@@ -2758,7 +2758,7 @@ following:</p>
 ## 
 ##         z = 60.9 
 ##   p-value = 0</code></pre>
-<p>Listwise deletion:</p>
+<p>Cohen’s kappa statistic (with listwise deletion):</p>
 <pre><code>##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
 ## 
 ##  Subjects = 445 
@@ -2767,7 +2767,7 @@ following:</p>
 ## 
 ##         z = 15.5 
 ##   p-value = 0</code></pre>
-<p>Gwent’s kappa is the following (NA’s as category):</p>
+<p>Gwet’s coefficient (with missings coded as <code>-1</code>)</p>
 <pre><code>## $est
 ##   coeff.name        pa        pe coeff.val coeff.se      conf.int p.value
 ## 1        AC1 0.9851802 0.1567117   0.98243  0.00463 (0.973,0.992)       0
@@ -2782,7 +2782,7 @@ following:</p>
 ## 
 ## $categories
 ## [1] -1  0  1</code></pre>
-<p>Gwent’s kappa on complete cases:</p>
+<p>Gwet’s coefficient (with listwise deletion):</p>
 <pre><code>## $est
 ##   coeff.name        pa        pe coeff.val coeff.se      conf.int p.value
 ## 1        AC1 0.9011236 0.3434516    0.8494  0.02315 (0.804,0.895)       0
@@ -2796,7 +2796,7 @@ following:</p>
 ## 
 ## $categories
 ## [1] 0 1</code></pre>
-<p>Krippendorf’s alpha is the following:</p>
+<p>Krippendorff’s alpha (with listwise deletion):</p>
 <pre><code>##  Krippendorff&#39;s alpha
 ## 
 ##  Subjects = 3103 
