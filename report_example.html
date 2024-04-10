@@ -2731,7 +2731,16 @@ following:</p>
 ##  Subjects = 445 
 ##    Raters = 2 
 ##   %-agree = 90.1</code></pre>
-<p>The Kappa statistic is the following:</p>
+<p>Regular old kappa (with NA’s coded):</p>
+<pre><code>##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
+## 
+##  Subjects = 2969 
+##    Raters = 2 
+##     Kappa = 0.944 
+## 
+##         z = 60.9 
+##   p-value = 0</code></pre>
+<p>Listwise deletion:</p>
 <pre><code>##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
 ## 
 ##  Subjects = 445 
@@ -2740,10 +2749,25 @@ following:</p>
 ## 
 ##         z = 15.5 
 ##   p-value = 0</code></pre>
-<p>Gwent’s kappa is the following:</p>
+<p>Gwent’s kappa is the following (NA’s as category):</p>
 <pre><code>## $est
-##          coeff.name        pa pe coeff.val coeff.se      conf.int p.value
-## 1 Percent Agreement 0.9011236  0 0.9011236    0.042 (0.819,0.983)       0
+##   coeff.name        pa        pe coeff.val coeff.se      conf.int p.value
+## 1        AC1 0.9851802 0.1567117   0.98243  0.00463 (0.973,0.992)       0
+##       w.name
+## 1 unweighted
+## 
+## $weights
+##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    1    0
+## [3,]    0    0    1
+## 
+## $categories
+## [1] -1  0  1</code></pre>
+<p>Gwent’s kappa on complete cases:</p>
+<pre><code>## $est
+##   coeff.name        pa        pe coeff.val coeff.se      conf.int p.value
+## 1        AC1 0.9011236 0.3434516    0.8494  0.02315 (0.804,0.895)       0
 ##       w.name
 ## 1 unweighted
 ## 

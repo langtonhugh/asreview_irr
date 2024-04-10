@@ -28,6 +28,7 @@ library(tools)
 library(glue)
 library(readxl)
 library(utils)
+library(tidyr, include.only = "replace_na")
 library(kableExtra)
 library(tcltk)
 library(waffle)
@@ -460,16 +461,28 @@ The level of agreement between rater A and rater B is the following:
 
 ```{r}
 agree(full_array)
+na_as_cat <- replace_na(full_array, -1)
+complete_cases <- full_array[complete.cases(full_array),]
 ```
 
-The Kappa statistic is the following:
-
+Regular old kappa (with NA's coded):
 ```{r}
-kappa2(full_array)
+kappa2(na_as_cat)
 ```
-Gwent's kappa is the following:
+
+Listwise deletion:
 ```{r}
- pa.coeff.raw(full_array)
+kappa2(complete_cases)
+```
+
+Gwent's kappa is the following (NA's as category):
+```{r}
+ gwet.ac1.raw(na_as_cat)
+
+```
+Gwent's kappa on complete cases:
+```{r}
+gwet.ac1.raw(complete_cases)
 ```
 Krippendorf's alpha is the following:
 ```{r}
