@@ -1,0 +1,33 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: litcompare
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Samuel
+    family-names: Langton
+    email: s.h.langton@amsterdamumc.nl
+    affiliation: Amsterdam UMC
+    orcid: 'https://orcid.org/0000-0002-1322-1553'
+  - given-names: Maas
+    family-names: van Steenbergen
+    email: mvansteenbergen@proton.me
+    affiliation: Utrecht University
+repository-code: 'https://github.com/langtonhugh/asreview_irr'
+abstract: >-
+  This is an open source tool which makes it easier to
+  compare the decisions by two raters after screening
+  literature samples in ASReview. The report can be created
+  automatically using the .csv files downloaded directly
+  from the ASReview dashboard.
+keywords:
+  - asreview
+  - literature screening
+  - inter-rater reliability
+  - rmarkdown
+license: Apache-2.0
+date-released: '2024-04-10'
