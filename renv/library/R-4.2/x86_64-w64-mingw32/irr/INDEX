@@ -1,0 +1,36 @@
+N.cohen.kappa           Sample Size Calculation for Cohen's Kappa
+                        Statistic
+N2.cohen.kappa          Sample Size Calculation for Cohen's Kappa
+                        Statistic with more than one category
+agree                   Simple and extended percentage agreement
+anxiety                 Anxiety ratings by different raters
+bhapkar                 Bhapkar coefficient of concordance between
+                        raters
+diagnoses               Psychiatric diagnoses provided by different
+                        raters
+finn                    Finn coefficient for oneway and twoway models
+icc                     Intraclass correlation coefficient (ICC) for
+                        oneway and twoway models
+iota                    iota coefficient for the interrater agreement
+                        of multivariate observations
+kappa2                  Cohen's Kappa and weighted Kappa for two raters
+kappam.fleiss           Fleiss' Kappa for m raters
+kappam.light            Light's Kappa for m raters
+kendall                 Kendall's coefficient of concordance W
+kripp.alpha             calculate Krippendorff's alpha reliability
+                        coefficient
+maxwell                 Maxwell's RE coefficient for binary data
+meancor                 Mean of bivariate correlations between raters
+meanrho                 Mean of bivariate rank correlations between
+                        raters
+print.icclist           Default printing function for ICC results
+print.irrlist           Default printing function for various
+                        coefficients of interrater reliability
+rater.bias              Coefficient of rater bias
+relInterIntra           Inter- and intra-rater reliability
+robinson                Robinson's A
+stuart.maxwell.mh       Stuart-Maxwell coefficient of concordance for
+                        two raters
+video                   Different raters judging the credibility of
+                        videotaped testimonies
+vision                  Eye-testing case records

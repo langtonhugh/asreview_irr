@@ -1,0 +1,16 @@
+choose_font             Choose an installed font from a list
+embed_fonts             Embeds fonts that are listed in the local
+                        Fontmap
+extrafont               extrafont package
+font_addpackage         Add font from an installed package to fonts
+                        database
+font_import             Import system fonts
+font_install            Install a font package and register it in the
+                        fonts database
+fonts                   Show the fonts that are registered in the font
+                        table (and available for embedding)
+fonttable               Returns the full font table
+loadfonts               Reads the fonttable database and registers
+                        those fonts with R
+ttf_import              Imports all TrueType fonts in a directory and
+                        all subdirectories

@@ -1,0 +1,15 @@
+Package: extrafontdb
+Title: Package for holding the database for the extrafont package
+Version: 1.0
+Author: Winston Chang <winston@stdout.org>
+Maintainer: Winston Chang <winston@stdout.org>
+Description: Package for holding the database for the extrafont package
+Depends: R (>= 2.14)
+License: GPL-2
+URL: https://github.com/wch/extrafontdb
+Collate: 'extrafontdb.r'
+Packaged: 2012-06-04 19:39:09 UTC; winston
+Repository: RSPM
+Date/Publication: 2012-06-11 15:40:11
+Encoding: UTF-8
+Built: R 4.2.0; ; 2024-01-23 01:20:26 UTC; windows
