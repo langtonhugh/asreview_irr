@@ -2736,12 +2736,9 @@ breakdown</h2>
 </center>
 </div>
 </div>
-<div id="comparison-of-different-kappa-methods" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Comparison of different
-Kappa methods</h1>
-</div>
-<div id="kappa" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Kappa</h1>
+<div id="inter-rater-reliability-statistics" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Inter-rater reliability
+statistics</h1>
 <p>The level of agreement between rater A and rater B is the
 following:</p>
 <pre><code>##  Percentage agreement (Tolerance=0)
@@ -2749,7 +2746,9 @@ following:</p>
 ##  Subjects = 445 
 ##    Raters = 2 
 ##   %-agree = 90.1</code></pre>
-<p>Cohen’s kappa statistic (with missings coded as <code>-1</code>):</p>
+<div id="cohens-kappa" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Cohen’s kappa</h2>
+<p>With missings coded as <code>-1</code>:</p>
 <pre><code>##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
 ## 
 ##  Subjects = 2969 
@@ -2758,7 +2757,7 @@ following:</p>
 ## 
 ##         z = 60.9 
 ##   p-value = 0</code></pre>
-<p>Cohen’s kappa statistic (with listwise deletion):</p>
+<p>With listwise deletion:</p>
 <pre><code>##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
 ## 
 ##  Subjects = 445 
@@ -2767,7 +2766,11 @@ following:</p>
 ## 
 ##         z = 15.5 
 ##   p-value = 0</code></pre>
-<p>Gwet’s coefficient (with missings coded as <code>-1</code>)</p>
+</div>
+<div id="gwets-coefficient" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Gwet’s
+coefficient</h2>
+<p>With missings coded as <code>-1</code>:</p>
 <pre><code>## $est
 ##   coeff.name        pa        pe coeff.val coeff.se      conf.int p.value
 ## 1        AC1 0.9851802 0.1567117   0.98243  0.00463 (0.973,0.992)       0
@@ -2782,7 +2785,7 @@ following:</p>
 ## 
 ## $categories
 ## [1] -1  0  1</code></pre>
-<p>Gwet’s coefficient (with listwise deletion):</p>
+<p>With listwise deletion:</p>
 <pre><code>## $est
 ##   coeff.name        pa        pe coeff.val coeff.se      conf.int p.value
 ## 1        AC1 0.9011236 0.3434516    0.8494  0.02315 (0.804,0.895)       0
@@ -2796,17 +2799,22 @@ following:</p>
 ## 
 ## $categories
 ## [1] 0 1</code></pre>
-<p>Krippendorff’s alpha (with listwise deletion):</p>
+</div>
+<div id="krippendorffs-alpha" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Krippendorff’s
+alpha</h2>
+<p>With listwise deletion:</p>
 <pre><code>##  Krippendorff&#39;s alpha
 ## 
 ##  Subjects = 3103 
 ##    Raters = 2 
 ##     alpha = 0.712</code></pre>
 </div>
-<div id="disagreements" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Disagreements</h1>
-<div id="relevant-versus-unreviewed" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> Relevant versus
+</div>
+<div id="disagreements" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Disagreements</h1>
+<div id="relevant-versus-unreviewed" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Relevant versus
 unreviewed</h2>
 <p>If there are any, the following are the articles for which one rater
 flagged ‘relevant’ and the other did not review it because it lay beyond
@@ -2863,8 +2871,8 @@ PHILADELPHIA, PA 19106 USA
 </tbody>
 </table>
 </div>
-<div id="rater-a" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> Rater A</h2>
+<div id="rater-a" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Rater A</h2>
 <p>Studies for which rater A flagged relevant and rater B flagged
 irrelevant.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -4376,8 +4384,8 @@ Switzerland AG 2020.
 <p><br></p>
 <p><br></p>
 </div>
-<div id="rater-b" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> Rater B</h2>
+<div id="rater-b" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Rater B</h2>
 <p>Studies for which rater B flagged relevant and rater A flagged
 irrelevant.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">

@@ -466,10 +466,7 @@ first_secon_review_df %>%
 
 </center>
 
-# Comparison of different Kappa methods
-
-
-# Kappa
+# Inter-rater reliability statistics
 
 ```{r}
 # Create NAs coded and listwise deletions lists.
@@ -483,32 +480,38 @@ The level of agreement between rater A and rater B is the following:
 agree(full_array)
 ```
 
-Cohen's kappa statistic (with missings coded as `-1`):
+## Cohen's kappa
+
+With missings coded as `-1`:
 
 ```{r}
 kappa2(na_as_cat)
 ```
 
-Cohen's kappa statistic (with listwise deletion):
+With listwise deletion:
 
 ```{r}
 
 kappa2(complete_cases)
 ```
 
-Gwet's coefficient (with missings coded as `-1`)
+## Gwet's coefficient
+
+With missings coded as `-1`:
 
 ```{r}
 gwet.ac1.raw(na_as_cat)
 ```
 
-Gwet's coefficient (with listwise deletion):
+With listwise deletion:
 
 ```{r}
 gwet.ac1.raw(complete_cases)
 ```
 
-Krippendorff's alpha (with listwise deletion):
+## Krippendorff's alpha 
+
+With listwise deletion:
 
 ```{r}
 kripp.alpha(t(full_array))
