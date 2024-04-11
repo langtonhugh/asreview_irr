@@ -1,4 +1,4 @@
-Tool for assessing the level of agreement between two raters following screening in [ASReview](https://asreview.nl/).
+Tool for assessing the level of agreement between two raters following screening in [ASReview](https://asreview.nl/). You can take a look at an example report on [rpubs](https://rpubs.com/langton_/asrlitcompare).
 
 ## Instructions
 
