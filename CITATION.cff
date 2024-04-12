@@ -17,6 +17,9 @@ authors:
     family-names: van Steenbergen
     email: mvansteenbergen@proton.me
     affiliation: Utrecht University
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.10964339
 repository-code: 'https://github.com/langtonhugh/asreview_irr'
 abstract: >-
   This is an open source tool which makes it easier to
@@ -30,4 +33,4 @@ keywords:
   - inter-rater reliability
   - rmarkdown
 license: Apache-2.0
-date-released: '2024-04-10'
+date-released: '2024-04-12'
