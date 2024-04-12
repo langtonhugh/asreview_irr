@@ -22,11 +22,9 @@ identifiers:
     value: 10.5281/zenodo.10964339
 repository-code: 'https://github.com/langtonhugh/asreview_irr'
 abstract: >-
-  This is an open source tool which makes it easier to
-  compare the decisions by two raters after screening
-  literature samples in ASReview. The report can be created
-  automatically using the .csv files downloaded directly
-  from the ASReview dashboard.
+  This tool automatically creates a summary report which
+  makes it easier to compare the decisions by two raters
+  after screening literature samples in ASReview.
 keywords:
   - asreview
   - literature screening
