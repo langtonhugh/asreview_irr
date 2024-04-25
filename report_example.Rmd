@@ -463,7 +463,13 @@ first_secon_review_df %>%
 
 </center>
 
-# Inter-rater reliability statistics
+# Comparison of different IRR methods
+
+Here we present different Kappa-methods to calculate the IRR.
+
+CAUTION! We are still actively researching what method is best to calculate the inter-rater reliability. It is difficult to find out what the optimal way to calculate the IRR is for our dataset, because the unrated items of both raters (the items that ASReview are less relevant), depend on what you rated already beforehand. This is not the kind of situation that most IRR-statistics are equipped to handle. If they are equipped to deal with unrated items, it is assumed that the missing data is random.
+
+For now, we recommend using Gwet's kappa using listwise deletion. Note that this recommendation may change in the coming time!
 
 ```{r}
 # Create NAs coded and listwise deletions lists.
@@ -477,38 +483,43 @@ The level of agreement between rater A and rater B is the following:
 agree(full_array)
 ```
 
-## Cohen's kappa
+## Cohen's kappa statistic (with missings coded as `-1`):
 
-With missings coded as `-1`:
+Cohen's kappa is used to measure the agreement between raters, correcting for chance alone. In this version, the missing's are coded, which means that they are counted among the data. A downside of this method is that it can artificially inflate agreement rates because it treats missing values the same as observed values. It skews the results by giving undue weight to unrated items as it treats them the same as the observed values
 
 ```{r}
 kappa2(na_as_cat)
 ```
 
-With listwise deletion:
+## Cohen's kappa statistic (with listwise deletion):
+
+Cohen's kappa is used to measure the agreement between raters, correcting for chance alone. In this version, cases with missing values are excluded from the analysis. By only considering cases where both raters provided data, it provides a cleaner estimate of agreement between raters. This can reduce bias introduced by missing data and may provide a more accurate representation of true agreement.
 
 ```{r}
 
 kappa2(complete_cases)
 ```
 
-## Gwet's coefficient
+## Gwet's coefficient (with missings coded as `-1`)
 
-With missings coded as `-1`:
+Gwet's Kappa incorporates a prevalence adjustment. By weighting agreement based on the prevalence of the categories being rated, it aims to provide a more balanced measure of agreement. The increased complexity means that it can be more difficult to interpret. In this version, the missing's are coded, which means that they are counted among the data. A downside of this method is that it can artificially inflate agreement rates because it treats missing values the same as observed values. It skews the results by giving undue weight to unrated items as it treats them the same as the observed values
+
 
 ```{r}
 gwet.ac1.raw(na_as_cat)
 ```
 
-With listwise deletion:
+## Gwet's coefficient (with listwise deletion):
+
+Gwet's Kappa incorporates a prevalence adjustment. By weighting agreement based on the prevalence of the categories being rated, it can result in a more balanced measure of agreement. By only considering cases where both raters provided data, it provides a cleaner estimate of agreement between raters. This can reduce bias introduced by missing data and may provide a more accurate representation of true agreement.
 
 ```{r}
 gwet.ac1.raw(complete_cases)
 ```
 
-## Krippendorff's alpha 
+## Krippendorff's alpha (with listwise deletion):
 
-With listwise deletion:
+Krippendorff's alpha is a generalization of Cohen's kappa that can handle multiple raters. It has no prevalance correction (see Gwet's kappa).
 
 ```{r}
 kripp.alpha(t(full_array))
