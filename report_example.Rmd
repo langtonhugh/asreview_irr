@@ -467,7 +467,7 @@ first_secon_review_df %>%
 
 Here we present different Kappa-methods to calculate the IRR.
 
-CAUTION! We are still actively researching what method is best to calculate the inter-rater reliability. It is difficult to find out what the optimal way to calculate the IRR is for our dataset, because the unrated items of both raters (the items that ASReview are less relevant), depend on what you rated already beforehand. This is not the kind of situation that most IRR-statistics are equipped to handle. If they are equipped to deal with unrated items, it is assumed that the missing data is random.
+CAUTION! We are still actively researching what method is best to calculate the inter-rater reliability. It is difficult to find out what the optimal way to calculate the IRR, because the unrated items of both raters (the items that ASReview deems less relevant), depend on what you rated beforehand. This is not the kind of situation that most IRR-statistics are equipped to handle. If they are equipped to deal with unrated items, it is assumed that the missing data is random.
 
 For now, we recommend using Gwet's kappa using listwise deletion. Note that this recommendation may change in the coming time!
 
@@ -485,7 +485,7 @@ agree(full_array)
 
 ## Cohen's kappa statistic (with missings coded as `-1`):
 
-Cohen's kappa is used to measure the agreement between raters, correcting for chance alone. In this version, the missing's are coded, which means that they are counted among the data. A downside of this method is that it can artificially inflate agreement rates because it treats missing values the same as observed values. It skews the results by giving undue weight to unrated items as it treats them the same as the observed values
+Cohen's kappa is used to measure the agreement between raters, correcting for chance alone. In this version, the missings are coded, which means that they are counted among the data. A downside of this method is that it can artificially inflate agreement rates because it treats missing values the same as observed values. It skews the results by giving undue weight to unrated items as it treats them the same as the observed values.
 
 ```{r}
 kappa2(na_as_cat)
@@ -502,7 +502,7 @@ kappa2(complete_cases)
 
 ## Gwet's coefficient (with missings coded as `-1`)
 
-Gwet's Kappa incorporates a prevalence adjustment. By weighting agreement based on the prevalence of the categories being rated, it aims to provide a more balanced measure of agreement. The increased complexity means that it can be more difficult to interpret. In this version, the missing's are coded, which means that they are counted among the data. A downside of this method is that it can artificially inflate agreement rates because it treats missing values the same as observed values. It skews the results by giving undue weight to unrated items as it treats them the same as the observed values
+Gwet's Kappa incorporates a prevalence adjustment. By weighting agreement based on the prevalence of the categories being rated, it aims to provide a more balanced measure of agreement. The increased complexity means that it can be more difficult to interpret. In this version, the missings are coded, which means that they are counted among the data. A downside of this method is that it can artificially inflate agreement rates because it treats missing values the same as observed values. It skews the results by giving undue weight to unrated items as it treats them the same as the observed values.
 
 
 ```{r}
