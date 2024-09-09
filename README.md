@@ -5,9 +5,11 @@ Tool for assessing the level of agreement between two raters following screening
 When `knit` within R/RStudio, the .Rmd file will automatically produce a summary report (.html) on the level of agreement between two raters.
 
 Step 1: Download and save the .csv outputs from ASReview into the 'data' folder.  
-Step 2: Open up the asreview_irr.Rproj in RStdudio.  
+Step 2: Open up the `asreview_irr.Rproj` in RStudio.  
 Step 3: Open report_example.Rmd.  
 Step 4: Knit the report and when prompted pick the relevant data files.  
+
+Upon opening `asreview_irr.Rproj` you might be prompted by warnings from [renv](https://rstudio.github.io/renv/articles/renv.html). We would recommend matching the R version stated in the lockfile and executing `renv::restore()` before building the report.
 
 ## Info
 
