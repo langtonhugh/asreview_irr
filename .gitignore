@@ -1,3 +1,6 @@
+# Extras.
+presentation/*
+
 # Data
 data/*
 !data/text_doc.txt
