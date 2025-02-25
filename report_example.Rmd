@@ -465,11 +465,9 @@ first_secon_review_df %>%
 
 # Comparison of different IRR methods
 
-Here we present different Kappa-methods to calculate the IRR.
+Here we present different methods to calculate the inter-rater reliability (IRR).
 
-CAUTION! We are still actively researching what method is best to calculate the inter-rater reliability. It is difficult to find out what the optimal way to calculate the IRR, because the unrated items of both raters (the items that ASReview deems less relevant), depend on what you rated beforehand. This is not the kind of situation that most IRR-statistics are equipped to handle. If they are equipped to deal with unrated items, it is assumed that the missing data is random.
-
-For now, we recommend using Gwet's kappa using listwise deletion. Note that this recommendation may change in the coming time!
+CAUTION! We are still actively researching what method is most appropriate to calculate the IRR. It is not straightforward because the unrated items of both raters (the items that ASReview deems less relevant), depend on what you rated beforehand. This is not the kind of situation that most IRR-statistics are equipped to handle. If they are equipped to deal with unrated items, it is assumed that the missing data is random. For now, we recommend using Gwet's kappa using listwise deletion. Note that this recommendation may change in the future.
 
 ```{r}
 # Create NAs coded and listwise deletions lists.
