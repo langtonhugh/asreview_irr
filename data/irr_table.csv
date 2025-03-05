@@ -1,12 +1,12 @@
  ,rater A,rater B
-n uploaded,3103,3103
-n reviewed,489,535
-% reviewed,15.76,17.24
-n flagged relevant,115,82
-n flagged irrelevant,374,453
-% flagged relevant,23.52,15.33
-n unreviewed,2614,2568
-n irrelevant + unreviewed,2988,3021
-% irrelevant + unreviewed,3.71,2.64
-n relevant v. irrelevant,39,5
-n relevant v. unreviewed,0,1
+n uploaded,12813,12813
+n reviewed,1282,1281
+% reviewed,10.01,10
+n flagged relevant,48,37
+n flagged irrelevant,1234,1244
+% flagged relevant,3.74,2.89
+n unreviewed,11531,11532
+n irrelevant + unreviewed,12765,12776
+% irrelevant + unreviewed,0.37,0.29
+n relevant v. irrelevant,19,10
+n relevant v. unreviewed,0,0

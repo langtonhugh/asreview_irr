@@ -177,10 +177,14 @@ first_relevant_vec <- first_df %>%
 
 disagree1_df <- secon_df %>%
   filter(.data[[relevance_2]] == 0, .data[[id_name_2]] %in% first_relevant_vec) %>%
-  select(paste(id_name_2), paste(authors_2), paste(year_2), paste(title_2), paste(abstract_2)) # For older projects.
+  select(paste(id_name_2),
+         paste(authors_2),
+         paste(year_2),
+         paste(title_2),
+         paste(abstract_2)) # For older projects.
 
 # Define how many disagreements for table.
-first_dis <- nrow(disagree1_df) # 39
+first_dis <- nrow(disagree1_df) 
 
 # Disagreement 2: second coder says relevant, first coder says irrelevant, 
 secon_relevant_vec <- secon_df %>% 
@@ -193,7 +197,7 @@ disagree2_df <- first_df %>%
   select(paste(id_name_1), paste(authors_1), paste(year_1), paste(title_1), paste(abstract_1)) # For older projects.
 
 # Define how many disagreements for table.
-secon_dis <- nrow(disagree2_df) # 5
+secon_dis <- nrow(disagree2_df) 
 
 # Sort and create vectors for Kappa.
 first_vec <- first_df %>% 
@@ -236,7 +240,7 @@ first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Frequency counts.
-# table(first_dist_df$missed_flag_fac)
+table(first_dist_df$missed_flag_fac)
 
 # Create flag for those identified as relevant by second rater, but not reviewed
 # by second.
@@ -325,12 +329,14 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 # Remove the notes col
 secon_df <- secon_df %>% 
   # select(-exported_notes_1) %>%      # add if needed.
-  mutate(rater_id = 2) 
+  mutate(rater_id = 2,
+         edition = as.numeric(edition)) 
   # rename(record_id = `ï..record_id`) # add if needed.
 
 # Create rater id for the first rater.
 first_df <- first_df %>% 
-  mutate(rater_id = 1)
+  mutate(rater_id = 1,
+         edition = as.numeric(edition))
 
 colnames(secon_df)[colnames(secon_df) == paste(id_name_2)] <- id_name_1
 colnames(secon_df)[colnames(secon_df) == paste(relevance_2)] <- relevance_1
@@ -536,7 +542,7 @@ if (missed1 == 0 & missed2 == 0) {
   compare_df %>% 
     filter(agreement_number == 1001) %>%
     select(-agreement_number) %>% 
-    mutate(publication_year = str_extract_all(publication_year, "^.{4}")) %>% 
+    mutate(year = str_extract_all(year, "^.{4}")) %>% 
     kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   kable_styling()
   
@@ -551,7 +557,7 @@ Studies for which rater A flagged relevant and rater B flagged irrelevant.
 # Here, note that ASReview updated their default column names late-2021. 
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 disagree1_df %>% 
-  mutate(publication_year = str_extract_all(publication_year, "^.{4}")) %>% 
+  mutate(year = str_extract_all(year, "^.{4}")) %>% 
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>%
   kable_styling() 
   # scroll_box(width = "120%", height = "300px") %>% 
@@ -570,7 +576,7 @@ Studies for which rater B flagged relevant and rater A flagged irrelevant.
 # If your project is newer (late-2021 onward) then comment out the mutate() line.
 
 disagree2_df %>% 
-  mutate(publication_year = str_extract_all(publication_year, "^.{4}")) %>% 
+  mutate(year = str_extract_all(year, "^.{4}")) %>% 
   kable(col.names = c("id", "author(s)", "year", "title", "abstract")) %>% 
   # scroll_box(width = "120%", height = "300px") %>%
   kable_styling()
