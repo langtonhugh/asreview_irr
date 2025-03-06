@@ -218,59 +218,57 @@ full_array <- cbind(first_vec, secon_vec)
 # Further disagreement statistics.
 
 # Identify left unreviewed by rater 1.
-first_dist_vec <- first_df %>% 
+first_unrev_vec <- first_df %>% 
   filter(is.na(.data[[relevance_1]])) %>%
   pluck(paste(id_name_1))
 
 # Check. This should be TRUE.
-# length(first_dist_vec) == first_unrev
+# length(first_unrev_vec) == first_unrev
 
 # Identify left unreviewed by rater 2.
-secon_dist_vec <- secon_df %>% 
+secon_unrev_vec <- secon_df %>% 
   filter(is.na(.data[[relevance_2]])) %>%
   pluck(paste(id_name_2))
 
-
-
 # Identify  relevant by rater 1 but unreviewed by rater 2.
-first_dist_df <- first_df %>% 
+first_unrev_df <- first_df %>% 
   filter(.data[[relevance_1]] == 1) %>% 
-  mutate(missed_flag = if_else(first_relevant_vec %in% secon_dist_vec,
+  mutate(missed_flag = if_else(first_relevant_vec %in% secon_unrev_vec,
                                "missed",
                                "not missed"),
          missed_flag = as.factor(missed_flag))
 
 # Define the factor levels so we get frequencies of zeros, if there.
-first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
+first_unrev_df$missed_flag_fac <- factor(first_unrev_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Frequency counts.
-table(first_dist_df$missed_flag_fac)
+# table(first_unrev_df$missed_flag_fac)
 
 # Create comparable flag the other way around.
 # by second.
-secon_dist_df <- secon_df %>% 
+secon_unrev_df <- secon_df %>% 
   filter(.data[[relevance_2]] == 1) %>% 
-  mutate(missed_flag = if_else(secon_relevant_vec %in% first_dist_vec,
+  mutate(missed_flag = if_else(secon_relevant_vec %in% first_unrev_vec,
                           "missed",
                           "not missed"),
          missed_flag = as.factor(missed_flag))
 
 # Define the factor levels so we get frequencies of zeros, if there.
-first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
+first_unrev_df$missed_flag_fac <- factor(first_unrev_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Define the factor levels so we get frequencies of zeros, if there.
-secon_dist_df$missed_flag_fac <- factor(secon_dist_df$missed_flag,
+secon_unrev_df$missed_flag_fac <- factor(secon_unrev_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Frequency counts.
-table(first_dist_df$missed_flag_fac)
-table(secon_dist_df$missed_flag_fac)
+# table(first_unrev_df$missed_flag_fac)
+# table(secon_unrev_df$missed_flag_fac)
 
 # Create vectors with numbers of missed for the table.
-missed1 <- table(first_dist_df$missed_flag_fac)[["missed"]]
-missed2 <- table(secon_dist_df$missed_flag_fac)[["missed"]]
+missed1 <- table(first_unrev_df$missed_flag_fac)[["missed"]]
+missed2 <- table(secon_unrev_df$missed_flag_fac)[["missed"]]
 ```
 
 ```{r irrdatasave}
@@ -409,7 +407,7 @@ kable(table2_summary_complete_df)
 
 ## Proportional breakdown
 
-If there are no green squares for relevant studies, then less than 0.5% of total abstracts were rated as relevant. Due to rounding, these studies won't show in the graphic.
+If there are no green squares for _relevant_ studies, this probably means that less than 0.5% of total abstracts were rated as relevant. Due to rounding, these studies won't show in the graphic.
 
 <center>
 
