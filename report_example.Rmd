@@ -401,7 +401,6 @@ kable(table2_summary_complete_df)
 -   Rater A flagged `r missed1` article(s) as relevant that rater B left unreviewed. This figure for Rater B was `r missed2`.
 -   The 'total irrelevant' figure is the sum of (1) the number of articles actively flagged as irrelevant by raters and (2) the number of articles left unreviewed after the stop rule (and therefore assumed to be irrelevant).
 -   Rater A flagged `r first_dis` articles as relevant that rater B flagged as irrelevant. Conversely, rater B flagged `r secon_dis` articles as relevant that rater B flagged as irrelevant.
--   Here, the number of decisions eligible for the Kappa statistic is defined as the *both raters made decision* figure. This is the sum of *both rated irrelevant*, *one rated relevant, other irrelevant* and *both rated relevant*. By default, then, the Kappa reported here does not include abstracts for which *one rated relevant, other left unreviewed*.
 
 # Visual summary
 
