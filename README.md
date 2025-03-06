@@ -1,7 +1,5 @@
 Tool for assessing the level of agreement between two raters following screening in [ASReview](https://asreview.nl/). You can take a look at an example report on [rpubs](https://rpubs.com/langton_/asreview_report_example).
 
-**Please note that a few bugs have been identified in the tool for users using recent versions of ASReview. We're working on fixing this! Please [get in contact](https://www.samlangton.info/) if you are using the tool, because it really helps with improvements.**
-
 ## Instructions
 
 When `knit` within R/RStudio, the .Rmd file will automatically produce a summary report (.html) on the level of agreement between two raters.
