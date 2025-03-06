@@ -195,7 +195,7 @@ secon_relevant_vec <- secon_df %>%
 
 # Subset first rater's irrelevant list with those second rater said relevant.
 disagree2_df <- first_df %>% 
-  filter(.data[[relevance_1]] == 0, .data[[id_name_1]] %in% secon_relevant_vec) %>% 
+  filter(.data[[relevance_1]] == 0, .data[[id_name_1]] %in% secon_relevant_vec) %>%
   select(paste(id_name_1), paste(authors_1), paste(year_1), paste(title_1), paste(abstract_1)) # For older projects.
 
 # Define how many disagreements for table.
@@ -230,9 +230,12 @@ secon_dist_vec <- secon_df %>%
   filter(is.na(.data[[relevance_2]])) %>%
   pluck(paste(id_name_2))
 
+
+
+# Identify  relevant by rater 1 but unreviewed by rater 2.
 first_dist_df <- first_df %>% 
   filter(.data[[relevance_1]] == 1) %>% 
-  mutate(missed_flag = if_else(paste(id_name_1) %in% secon_dist_vec,
+  mutate(missed_flag = if_else(first_relevant_vec %in% secon_dist_vec,
                                "missed",
                                "not missed"),
          missed_flag = as.factor(missed_flag))
@@ -244,11 +247,11 @@ first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
 # Frequency counts.
 table(first_dist_df$missed_flag_fac)
 
-# Create flag for those identified as relevant by second rater, but not reviewed
+# Create comparable flag the other way around.
 # by second.
 secon_dist_df <- secon_df %>% 
   filter(.data[[relevance_2]] == 1) %>% 
-  mutate(missed_flag = if_else(.data[[id_name_2]] %in% first_dist_vec,
+  mutate(missed_flag = if_else(secon_relevant_vec %in% first_dist_vec,
                           "missed",
                           "not missed"),
          missed_flag = as.factor(missed_flag))
@@ -262,7 +265,8 @@ secon_dist_df$missed_flag_fac <- factor(secon_dist_df$missed_flag,
                                         levels = c("not missed", "missed"))
 
 # Frequency counts.
-# table(secon_dist_df$missed_flag_fac)
+table(first_dist_df$missed_flag_fac)
+table(secon_dist_df$missed_flag_fac)
 
 # Create vectors with numbers of missed for the table.
 missed1 <- table(first_dist_df$missed_flag_fac)[["missed"]]
@@ -313,7 +317,6 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 
 # Rater summary
 
-
 |                            |      rater A       |       rater B      |
 |----------------------------|--------------------|--------------------|
 | n uploaded                 | `r nrow(first_df)` | `r nrow(secon_df)` |
@@ -332,17 +335,17 @@ write_csv(x = irr_df, file = "data/irr_table.csv")
 # Overall summary
 
 ```{r additionaltable}
+# Create rater id for the first rater.
+first_df <- first_df %>% 
+  mutate(rater_id = 1,
+         edition = as.numeric(edition))
+
 # Remove the notes col
 secon_df <- secon_df %>% 
   # select(-exported_notes_1) %>%      # add if needed.
   mutate(rater_id = 2,
          edition = as.numeric(edition)) 
   # rename(record_id = `ï..record_id`) # add if needed.
-
-# Create rater id for the first rater.
-first_df <- first_df %>% 
-  mutate(rater_id = 1,
-         edition = as.numeric(edition))
 
 colnames(secon_df)[colnames(secon_df) == paste(id_name_2)] <- id_name_1
 colnames(secon_df)[colnames(secon_df) == paste(relevance_2)] <- relevance_1
@@ -353,7 +356,6 @@ colnames(secon_df)[colnames(secon_df) == paste(year_2)] <- year_1
 
 first_df[[paste(relevance_1)]] <- as.numeric(first_df[[paste(relevance_1)]])
 secon_df[[paste(relevance_1)]] <- as.numeric(secon_df[[paste(relevance_1)]])
-
 
 # Bind together.
 first_secon_review_df <- bind_rows(first_df, secon_df) %>% 
@@ -406,6 +408,8 @@ kable(table2_summary_complete_df)
 # Visual summary
 
 ## Proportional breakdown
+
+If there are no green squares for relevant studies, then less than 0.5% of total abstracts were rated as relevant. Due to rounding, these studies won't show in the graphic.
 
 <center>
 
