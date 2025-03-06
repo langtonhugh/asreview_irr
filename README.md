@@ -22,5 +22,5 @@ If you do use the tool in a paper, please cite it using the dropdown options abo
 
 ## Thanks
 
-Thanks to Roos Jansen, Amy Nivette, Amina op de Weegh, Stijn Ruiter, and the ASReview team for feedback on improving this report.
+Thanks to Annika Terpstra, Roos Jansen, Amy Nivette, Amina op de Weegh, Stijn Ruiter, and the ASReview team for feedback on improving this report.
 
