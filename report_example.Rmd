@@ -7,6 +7,8 @@ output:
     number_sections: true
     theme: united
     toc_float: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 This report is an example of the output from an [open source tool](https://github.com/langtonhugh/asreview_irr) which makes it easier to compare the decisions by two raters after screening literature samples in [ASReview](https://asreview.nl/). The report can be created automatically using the .csv files downloaded directly from the ASReview dashboard. The report is a work-in-progress. If you are an R user, please take a look at the [source code](https://github.com/langtonhugh/asreview_irr/blob/main/report_example.Rmd). Checks, feedback and suggestions for additional features are welcome. You can find my contact details on [my website](https://www.samlangton.info/).
@@ -250,6 +252,10 @@ secon_dist_df <- secon_df %>%
                           "missed",
                           "not missed"),
          missed_flag = as.factor(missed_flag))
+
+# Define the factor levels so we get frequencies of zeros, if there.
+first_dist_df$missed_flag_fac <- factor(first_dist_df$missed_flag,
+                                        levels = c("not missed", "missed"))
 
 # Define the factor levels so we get frequencies of zeros, if there.
 secon_dist_df$missed_flag_fac <- factor(secon_dist_df$missed_flag,
